@@ -6,13 +6,6 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<style>
-    .info-customer{
-        display:flex;
-        justify-content: center;
-        align-items: center;
-    }
-</style>
 <div class="header">
     <div class="container">
         <div class="row">
@@ -62,7 +55,9 @@
                 <div class="order">
                     <a href="order">
                         <i class="fa-solid fa-truck-fast"></i>
-                        <span>(${requestScope.countItems})</span>
+                        <c:if test="{${requestScope.countItems}}">
+                            <span>(${requestScope.countItems})</span>
+                        </c:if>
                     </a>
                 </div>
             </div>
@@ -70,8 +65,8 @@
                 <c:if test="${requestScope.Customer!=null}" >
                     <a href="info-customer">
                         <div class="info-customer">
-                            <i class="fa-regular fa-user"></i>
-                            <span>${requestScope.Customer.customerName}</span>
+                            <img  src="${requestScope.Customer.avatar}"
+                                  <span>${requestScope.Customer.customerName}</span>
                         </div>
                     </a>
                 </c:if> 

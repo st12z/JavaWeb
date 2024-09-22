@@ -66,22 +66,22 @@ public class CartServlet extends HttpServlet {
         DAO d = new DAO();
         Cookie[] arr = request.getCookies();
         String txt = "";
-        String token="";
+        String cartID="";
         if (arr != null) {
             for (Cookie o : arr) {
-                if (o.getName().equals("token")) {
-                    token=o.getValue();
+                if (o.getName().equals("cartID")) {
+                    cartID=o.getValue();
                     break;
                 }
             }
             for (Cookie o : arr) {
-                if (o.getName().equals("cart-"+token)) {
+                if (o.getName().equals("cart-"+cartID)) {
                     txt += o.getValue();
                 }
             }
 
         }
-
+        
         Cart cart = new Cart(txt);
         List<Item> items = cart.getItems();
         request.setAttribute("items", items);

@@ -68,17 +68,17 @@ public class ProcessServlet extends HttpServlet {
         DAO d = new DAO();
         Cookie arr[] = request.getCookies();
         String txt = "";
-        String token = "";
+        String cartID = "";
         HttpSession session = request.getSession();
         if (arr != null) {
             for (Cookie o : arr) {
-                if (o.getName().equals("token")) {
-                    token = o.getValue();
+                if (o.getName().equals("cartID")) {
+                    cartID = o.getValue();
                     break;
                 }
             }
             for (Cookie o : arr) {
-                if (o.getName().equals("cart-" + token)) {
+                if (o.getName().equals("cart-" + cartID)) {
                     txt += o.getValue();
                     o.setMaxAge(0);
                     response.addCookie(o);
@@ -97,33 +97,18 @@ public class ProcessServlet extends HttpServlet {
                 }
             }
         } else if (action.equals("incr")) {
-            if (t.getQuantity()+1 <= t.getProduct().getQuantity()) {
-                t.setQuantity(t.getQuantity() + 1);
-            } else {
-                txt = "";
-                for (Item i : list) {
-                    for (int j = 0; j < i.getQuantity(); j++) {
-                        txt += i.getProduct().getId()+"-";
-                    }
-                }
-                response.addCookie(new Cookie("cart-" + token, txt));
-                session.setAttribute("notification", "Cửa hàng không đủ số lượng sản phẩm này");
-                response.sendRedirect("cart");
-                return;
-
-            }
+            t.setQuantity(t.getQuantity() + 1);
         } else {
             list.remove(t);
         }
         txt = "";
-        session.invalidate();
         for (Item i : list) {
             for (int j = 0; j < i.getQuantity(); j++) {
                 txt += i.getProduct().getId() + "-";
             }
         }
         request.setAttribute("items", list);
-        response.addCookie(new Cookie("cart-" + token, txt));
+        response.addCookie(new Cookie("cart-" + cartID, txt));
         if (!list.isEmpty()) {
             cart.setItems(list);
             response.sendRedirect("cart");

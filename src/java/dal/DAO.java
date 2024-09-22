@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import model.Comment;
 import model.Customer;
 import model.Item;
 import model.Order;
@@ -195,8 +196,28 @@ public class DAO extends DBContext {
             st.setString(1, email);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                Customer c = new Customer(rs.getInt("customerId"), rs.getString("customerName"),
-                        rs.getString("password"), rs.getString("token"), rs.getString("email"));
+                Customer c = new Customer(rs.getInt("customerID"), rs.getString("customerName"),
+                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"));
+                return c;
+            }
+
+            return null;
+
+        } catch (Exception ex) {
+
+        }
+        return null;
+    }
+
+    public Customer getCustomerByID(int customerID) {
+        String sql = "select *from Customer where customerID=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, customerID);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                Customer c = new Customer(rs.getInt("customerID"), rs.getString("customerName"),
+                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"));
                 return c;
             }
 
@@ -216,8 +237,8 @@ public class DAO extends DBContext {
             st.setString(2, password);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                Customer c = new Customer(rs.getInt("customerId"), rs.getString("customerName"),
-                        rs.getString("password"), rs.getString("token"), rs.getString("email"));
+                Customer c = new Customer(rs.getInt("customerID"), rs.getString("customerName"),
+                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"));
                 return c;
             }
 
@@ -291,15 +312,16 @@ public class DAO extends DBContext {
 
     public void insertCustomertoDB(Customer c) {
         String sql = "INSERT INTO [dbo].[Customer]\n"
-                + "           (\n"
-                + "           [customerName]\n"
+                + "           ([customerName]\n"
                 + "           ,[password]\n"
                 + "           ,[token]\n"
-                + "           ,[email])\n"
+                + "           ,[email]\n"
+                + "           ,[avatar])\n"
                 + "     VALUES\n"
-                + "           (?\n"
-                + "           ,?\n"
-                + "           ,?\n"
+                + "           (?"
+                + "           ,?"
+                + "           ,?"
+                + "           ,?"
                 + "           ,?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -307,6 +329,7 @@ public class DAO extends DBContext {
             st.setString(2, c.getPassword());
             st.setString(3, c.getToken());  // Sửa lại thứ tự cho đúng
             st.setString(4, c.getEmail());   // Sửa lại thứ tự cho đúng
+            st.setString(5, c.getAvatar());
             st.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();  // In lỗi ra để dễ dàng theo dõi vấn đề
@@ -321,8 +344,8 @@ public class DAO extends DBContext {
             st.setString(1, token);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                Customer c = new Customer(rs.getInt("customerId"), rs.getString("customerName"),
-                        rs.getString("password"), rs.getString("token"), rs.getString("email"));
+                Customer c = new Customer(rs.getInt("customerID"), rs.getString("customerName"),
+                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"));
                 return c;
             }
 
@@ -386,7 +409,7 @@ public class DAO extends DBContext {
 
         }
     }
-    
+
     public void insert_ListOrderProducttoDB(List<Item> items, int OrderId) {
         for (Item item : items) {
             int countOrderProductInDB = getQuantityRecords("OrderProduct");
@@ -420,25 +443,67 @@ public class DAO extends DBContext {
         }
         return null;
     }
-    public void setProductInDB(List<Product>listP){
-        try{
-            for(Product p : listP){
-                String sql="UPDATE products SET quantity=? where id=?";
+
+    public void setProductInDB(List<Product> listP) {
+        try {
+            for (Product p : listP) {
+                String sql = "UPDATE products SET quantity=? where id=?";
                 PreparedStatement st = connection.prepareStatement(sql);
                 st.setInt(1, p.getQuantity());
                 st.setString(2, p.getId());
                 st.executeUpdate();
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void insertCommentToDB(int customerID, String comment) {
+        String sql = "INSERT INTO [dbo].[Comments]\n"
+                + "           ([content], [customerID])\n" // Thêm dấu ngoặc đóng sau phần cột
+                + "     VALUES\n"
+                + "           (?, ?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, comment);
+            st.setInt(2, customerID);
+            st.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public List<Comment> getAllComment() {
+        List<Comment> list = new ArrayList<>();
+        String sql = "select * from Comments order by createAt desc";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                Comment a = new Comment(rs.getInt("commentID"),
+                        rs.getInt("customerID"), rs.getString("content"), rs.getDate("createAt"), rs.getDate("updateAt"));
+                list.add(a);
+            }
+            return list;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+    public void deleteComment(int commentID){
+
+        String sql = "delete from Comments where commentID=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, commentID);
+            st.executeUpdate();
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
     public static void main(String[] args) {
         DAO d = new DAO();
-        List<Item> items = d.getOrderByCustomerId(14);
-        for (Item item : items) {
-            System.out.println(item.getProduct().getName());
-        }
-
+        d.deleteComment(8);
+        
     }
 }

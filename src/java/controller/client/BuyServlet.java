@@ -65,27 +65,17 @@ public class BuyServlet extends HttpServlet {
         Cookie arr[] = request.getCookies();
         DAO d = new DAO();
         String txt = "";
-        String token = "";
+        String cartID = "";
         HttpSession session = request.getSession(true);
         if (arr != null) {
             for (Cookie o : arr) {
-                if (o.getName().equals("token")) {
-                    token = o.getValue();
+                if (o.getName().equals("cartID")) {
+                    cartID = o.getValue();
                     break;
                 }
             }
-            if (token.equals("")) {
-
-                session.setAttribute("errorCart", "Hãy đăng nhập để thêm giỏ hàng");
-                response.sendRedirect("chome");
-                return;
-            }
-            if (session != null) {
-                // Xóa một thuộc tính cụ thể của session
-                session.removeAttribute("errorCart");
-            }
             for (Cookie o : arr) {
-                if (o.getName().equals("cart-" + token)) {
+                if (o.getName().equals("cart-" + cartID)) {
                     txt += o.getValue();
                     o.setMaxAge(0);
                     response.addCookie(o);
@@ -101,18 +91,12 @@ public class BuyServlet extends HttpServlet {
                 countProductByID++;
             }
         }
-        Product p = d.getProduct(id);
         if (txt.isEmpty()) {
-            txt=id+"-";
+            txt = id + "-";
         } else {
-            if (countProductByID + 1 <= p.getQuantity()) {
-                txt += id+"-";
-                session.removeAttribute("errorCart");
-            } else {
-                session.setAttribute("errorCart", "Sản phẩm không đủ số lượng!");
-            }
+            txt += id + "-";
         }
-        Cookie c = new Cookie("cart-" + token, txt);
+        Cookie c = new Cookie("cart-" + cartID, txt);
         c.setMaxAge(2 * 24 * 60 * 60);
         response.addCookie(c);
         response.sendRedirect("home");

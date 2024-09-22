@@ -64,7 +64,20 @@ public class OrderServlet extends HttpServlet {
             throws ServletException, IOException {
         DAO d = new DAO();
         Cookie arr[]=request.getCookies();
-        String token=helper.helperClass.getToken(arr);
+        String token="";
+        if (arr != null) {
+            for (Cookie o : arr) {
+                if (o.getName().equals("token")) {
+                    token=o.getValue();
+                    break;
+                }
+            }
+
+        }
+        if(token.equals("")){
+            request.getRequestDispatcher("client/order.jsp").forward(request, response);
+            return;
+        }
         Customer c= d.getCustomerByToken(token);
         int customerId=c.getId();
         List<Item> items=d.getOrderByCustomerId(customerId);

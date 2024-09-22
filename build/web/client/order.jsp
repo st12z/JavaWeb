@@ -11,7 +11,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="client/css/style.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
               </head>
         <style>
@@ -25,7 +25,7 @@
         </style>
 
     <body>
-        <a href="home">Home</a>
+        <a href="home">Quay lại</a>
         <c:if test="${not empty requestScope.items}">
             <h1>Đơn hàng của bạn</h1>
             <div class="container mt-3 ">

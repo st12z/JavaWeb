@@ -12,30 +12,26 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-              </head>
-        <style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    </head>
 
-            td{
-                border:1px solid chocolate;
-            }
-            th{
-                border:1px solid chocolate;
-            }
-        </style>
+
+    <style>
+
+        td{
+            border:1px solid chocolate;
+        }
+        th{
+            border:1px solid chocolate;
+        }
+
+    </style>
     <body>
 
         <c:if test="${not empty requestScope.items}">
             <div class="container">
-                <div class="inner-logo">
-                    <a href="home"><img src="images/icon-logo.png" alt="logo"/></a>
-                </div>
-                <c:if test="${sessionScope.notification!=null}">
-                    <div class="alert alert-danger" role="alert" alert-cart>
-                        ${sessionScope.notification}
-                    </div>
-                </c:if>
+
                 <div class="row">
                     <div class="col-12">
                         <table>

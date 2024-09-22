@@ -13,17 +13,19 @@ public class Customer {
     private String customerName,password;
     public String token;
     public String email;
+    public String avatar;
     public Customer() {
     }
-    
-    public Customer(int id,String customerName, String password, String token, String email) {
-        this.id = id;
+
+    public Customer(int id,String customerName, String password, String token, String email, String avatar) {
+        this.id=id;
         this.customerName = customerName;
         this.password = password;
         this.token = token;
         this.email = email;
+        this.avatar = avatar;
     }
-    
+
     public int getId() {
         return id;
     }
@@ -42,6 +44,10 @@ public class Customer {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 
     public void setId(int id) {
@@ -63,7 +69,12 @@ public class Customer {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
     
+
 
 
 }

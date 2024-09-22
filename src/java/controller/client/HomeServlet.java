@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Cart;
 import model.Category;
+import model.Comment;
 import model.Customer;
 import model.Item;
 import model.Product;
@@ -27,8 +28,7 @@ import model.Product;
  * @author T
  */
 @WebServlet(name = "HomeServlet", urlPatterns = {"/home"})
-public class HomeServlet extends HttpServlet {
-
+public class HomeServlet extends HttpServlet { 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -68,6 +68,9 @@ public class HomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAO d = new DAO();
+        
+        
+        
         List<Category> listC = d.getAll();
         String cid_raw = request.getParameter("cid");
         String sortKey = request.getParameter("sortKey");
@@ -81,6 +84,7 @@ public class HomeServlet extends HttpServlet {
             }
             Cookie[] arr = request.getCookies();
             String txt = "";
+            String cartID="";
             String token="";
             if (arr != null) {
                 for(Cookie o :arr){
@@ -89,8 +93,19 @@ public class HomeServlet extends HttpServlet {
                         break;
                     }
                 }
+                for(Cookie o :arr){
+                    if(o.getName().equals("cartID")){
+                        cartID=o.getValue();
+                        break;
+                    }
+                }
+                if(cartID.equals("")){
+                    cartID=helper.helperClass.generateToken(10);
+                    Cookie cartCookie = new Cookie("cartID", cartID);
+                    response.addCookie(cartCookie);
+                }
                 for (Cookie o : arr) {
-                    if (o.getName().equals("cart-"+token)) {
+                    if (o.getName().equals("cart-"+cartID)) {
                         txt += o.getValue();
                         break;
                     }
@@ -129,7 +144,11 @@ public class HomeServlet extends HttpServlet {
             if(c!=null){
                 countItemOfOrder=d.getOrderByCustomerId(c.getId()).size();
             }
+            
+            List<Comment> listComment=d.getAllComment();
+            
             List<Product> listbyPage = d.getListByPage((ArrayList<Product>) listP, begin, end);
+            request.setAttribute("listComment", listComment);
             request.setAttribute("conditionSort", conditionSort);
             request.setAttribute("currentPage", currentPage);
             request.setAttribute("totalPage", totalPage);

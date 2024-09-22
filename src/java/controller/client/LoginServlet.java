@@ -22,6 +22,9 @@ import model.Customer;
 @WebServlet(name = "LoginServlet", urlPatterns = {"/login"})
 public class LoginServlet extends HttpServlet {
 
+    public static int countLogin = 0;
+    public static String emailLogin="";
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -61,11 +64,11 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         Cookie[] arr = request.getCookies();
-        String email="";
+        String email = "";
         if (arr != null) {
             for (Cookie o : arr) {
                 if (o.getName().equals("cusEmail")) {
-                    email=o.getValue();
+                    email = o.getValue();
                     request.setAttribute("email", o.getValue());
                 }
                 if (o.getName().equals("cusPass")) {
@@ -73,7 +76,7 @@ public class LoginServlet extends HttpServlet {
                 }
             }
         }
-        if(!email.equals("") || email==null){
+        if (!email.equals("") || email == null) {
             request.setAttribute("checked", true);
         }
         request.getRequestDispatcher("client/login.jsp").forward(request, response);
@@ -91,41 +94,64 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String email = request.getParameter("email");
+        if(emailLogin.equals("")) emailLogin=email;
         String password = request.getParameter("password");
         String checkBox = request.getParameter("checkBox");
         DAO d = new DAO();
-        Customer c = d.getCustomer(email, password);
+        Customer c = d.getCustomerByEmail(email);
+        Customer authAccount = d.getCustomer(email, password);
         if (c == null) {
-            request.setAttribute("error", "Tài khoản hoặc mật khẩu sai");
+            request.setAttribute("error", "Email không tồn tại!");
             request.getRequestDispatcher("client/login.jsp").forward(request, response);
         } else {
-            Cookie tokenCookie = new Cookie("token", c.getToken());
-            Cookie emailCookie = new Cookie("cusEmail", c.getEmail());
-            Cookie passCookie = new Cookie("cusPass", c.getPassword());
-            emailCookie.setMaxAge(3600 * 24);
-            passCookie.setMaxAge(3600 * 24);
-            tokenCookie.setMaxAge(3600 * 24);
-            response.addCookie(tokenCookie);
-            if (checkBox != null && checkBox.equals("1")) {
-                response.addCookie(emailCookie);
-                response.addCookie(passCookie);
-            } else {
-                Cookie[] arr = request.getCookies();
+            if (authAccount == null) {
+                this.countLogin+=1;
+                if(emailLogin.equals(email)){
+                    if(this.countLogin>=3){
+                        request.setAttribute("error", "Bạn đã đăng nhập quá 3 lần vui lòng thay đổi mật khẩu!");
+                    }
+                    else{
+                        request.setAttribute("error", "Mật khẩu sai!");
+                    }
+                }
+                else{
+                    this.countLogin=1;
+                    this.emailLogin=email;
+                    request.setAttribute("error", "Mật khẩu sai!");
+                }
+                request.getRequestDispatcher("client/login.jsp").forward(request, response);
 
-                if (arr != null) {
-                    for (Cookie o : arr) {
-                        if (o.getName().equals("cusEmail")) {
-                            o.setMaxAge(0);
-                            response.addCookie(o);
-                        }
-                        if (o.getName().equals("cusPass")) {
-                            o.setMaxAge(0);
-                            response.addCookie(o);
+            } else {
+                this.countLogin=0;
+                this.emailLogin="";
+                Cookie tokenCookie = new Cookie("token", c.getToken());
+                Cookie emailCookie = new Cookie("cusEmail", c.getEmail());
+                Cookie passCookie = new Cookie("cusPass", c.getPassword());
+                emailCookie.setMaxAge(3600 * 24);
+                passCookie.setMaxAge(3600 * 24);
+                tokenCookie.setMaxAge(3600 * 24);
+                response.addCookie(tokenCookie);
+                if (checkBox != null && checkBox.equals("1")) {
+                    response.addCookie(emailCookie);
+                    response.addCookie(passCookie);
+                } else {
+                    Cookie[] arr = request.getCookies();
+
+                    if (arr != null) {
+                        for (Cookie o : arr) {
+                            if (o.getName().equals("cusEmail")) {
+                                o.setMaxAge(0);
+                                response.addCookie(o);
+                            }
+                            if (o.getName().equals("cusPass")) {
+                                o.setMaxAge(0);
+                                response.addCookie(o);
+                            }
                         }
                     }
                 }
+                response.sendRedirect("home");
             }
-            response.sendRedirect("home");
 
         }
 

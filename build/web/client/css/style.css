@@ -49,3 +49,12 @@ table{
 .cart i{
     width:20px;
 }
+.info-customer{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.info-customer img{
+    width:30px;
+    margin-right: 10px;
+}

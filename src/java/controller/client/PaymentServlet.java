@@ -13,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.Cart;
 import model.Customer;
@@ -68,7 +69,8 @@ public class PaymentServlet extends HttpServlet {
         DAO d = new DAO();
         Cookie[] arr = request.getCookies();
         String txt = "";
-        String token = "";
+        String token="";
+        String cartID = "";
         if (arr != null) {
             for (Cookie o : arr) {
                 if (o.getName().equals("token")) {
@@ -77,13 +79,21 @@ public class PaymentServlet extends HttpServlet {
                 }
             }
             for (Cookie o : arr) {
-                if (o.getName().equals("cart-" + token)) {
+                if (o.getName().equals("cartID")) {
+                    cartID = o.getValue();
+                    break;
+                }
+            }
+            for (Cookie o : arr) {
+                if (o.getName().equals("cart-" + cartID)) {
                     txt += o.getValue();
                 }
             }
-
         }
-
+        if(token.equals("")){
+            response.sendRedirect("login");
+            return;
+        }
         Cart cart = new Cart(txt);
         List<Item> items = cart.getItems();
         request.setAttribute("items", items);
@@ -107,6 +117,7 @@ public class PaymentServlet extends HttpServlet {
         String phone = request.getParameter("phone");
         Cookie[] arr = request.getCookies();
         String txt = "";
+        String cartID = "";
         String token = "";
         if (arr != null) {
             for (Cookie o : arr) {
@@ -116,7 +127,14 @@ public class PaymentServlet extends HttpServlet {
                 }
             }
             for (Cookie o : arr) {
-                if (o.getName().equals("cart-" + token)) {
+                if (o.getName().equals("cartID")) {
+                    cartID = o.getValue();
+                    break;
+                }
+
+            }
+            for (Cookie o : arr) {
+                if (o.getName().equals("cart-" + cartID)) {
                     txt += o.getValue();
                     o.setMaxAge(0);
                     response.addCookie(o);
@@ -127,23 +145,26 @@ public class PaymentServlet extends HttpServlet {
         DAO d = new DAO();
         Cart cart = new Cart(txt);
         List<Item> items = cart.getItems();
-        List<Product> listProduct=d.getAllProducts();
-        for(Product p :listProduct){
-            for(Item i:items){
-                if(p.getId().equals(i.getProduct().getId())){
-                    p.setQuantity(p.getQuantity()-i.getQuantity());
+
+        List<Product> listProduct = d.getAllProducts();
+        for (Product p : listProduct) {
+            for (Item i : items) {
+                if (p.getId().equals(i.getProduct().getId())) {
+                    p.setQuantity(p.getQuantity() - i.getQuantity());
                 }
             }
         }
-        int countOrderInDB = d.getQuantityRecords("Orders");
+
         Customer c = d.getCustomerByToken(token);
         int customerId = c.getId();
         double totalPrice = cart.getTotalMoney();
-        Order o = new Order(countOrderInDB+1,customerId, fullname, address, phone, totalPrice);
+        int countOrderInDB = d.getQuantityRecords("Orders");
+        Order o = new Order(countOrderInDB + 1, customerId, fullname, address, phone, totalPrice);
         d.insertOrdertoDB(o);
-        d.insert_ListOrderProducttoDB(items,o.getOrderId());
+        d.insert_ListOrderProducttoDB(items, o.getOrderId());
         d.setProductInDB(listProduct);
         response.sendRedirect("home");
+
     }
 
     /**
