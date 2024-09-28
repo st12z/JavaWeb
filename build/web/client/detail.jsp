@@ -30,7 +30,7 @@
                     <div class="col-xl-7 col-lg-7 col-sm-5 col-12">
                         <div class="inner-content">
                             <h5>Tên sản phẩm: ${requestScope.product.name}</h5>
-                            <h5 style="color:red">Giá: ${requestScope.product.price}$</h5>
+                            <h5 style="color:red">Giá: ${requestScope.product.getPriceVND()} VNĐ</h5>
                             <p>Mô tả: ${requestScope.product.describe}</p>
                             <div class="button-buy">
                                 <a href="add-cart?id=${requestScope.product.id}">

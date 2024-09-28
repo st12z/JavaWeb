@@ -3,7 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/detail.jsp</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/dal/DAO.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/CommentServlet.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/HomeServlet.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/DeleteCommentServlet.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/order.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/CartServlet.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/js/script.js</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/model/Customer.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/register.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/home.jsp</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/comment.jsp</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/model/Comment.java</file>
         </group>
