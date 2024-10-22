@@ -14,6 +14,7 @@
         <title>JSP Page</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+        <link rel="stylesheet" href="/Shop/client/css/style.css"/>
     </head>
 
 
@@ -28,10 +29,11 @@
 
     </style>
     <body>
-
+        <%@ include file="header.jsp" %>
         <c:if test="${not empty requestScope.items}">
-            <div class="container">
 
+            <div class="container my-3">
+                <h1 class="mb-3">Thông tin giỏ hàng</h1>
                 <div class="row">
                     <div class="col-12">
                         <table>
@@ -41,6 +43,7 @@
                                     <th>Tên sản phẩm</th>
                                     <th>Ảnh sản phẩm</th>
                                     <th>Giá</th>
+                                    <th>Màu</th>
                                     <th>Số lượng</th>
                                     <th>Hành động</th>
                                 </tr>
@@ -50,19 +53,20 @@
                                     <tr>
                                         <td>${status.index+1}</td>
                                         <td>${i.product.name}</td>
-                                        <td><img src="${i.product.image}" alt="image" style="width:80px"/></td>
+                                        <td><img src="${i.image}" alt="image" style="width:80px"/></td>
                                         <td>${i.product.getPriceVND()} VNĐ</td>
+                                        <td><span class="badge badge-info">${i.color}</span></td>
                                         <td>
-                                            <a href="process?id=${i.product.id}&action=desc">
+                                            <a href="process?id=${i.product.id}&action=desc&colorId=${i.colorId}">
                                                 <button>-</button>
                                             </a>
                                             <input style="width:50px" type="number" value="${i.quantity}"/>
-                                            <a href="process?id=${i.product.id}&action=incr">
+                                            <a href="process?id=${i.product.id}&action=incr&colorId=${i.colorId}">
                                                 <button>+</button>
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="process?id=${i.product.id}&action=delete">
+                                            <a href="process?id=${i.product.id}&action=delete&colorId=${i.colorId}">
                                                 <button class="btn btn-warning">Delete</button>
                                             </a>
                                         </td>
@@ -74,17 +78,18 @@
                 </div>
 
                 <a href="payment">
-                    <button class="btn btn-primary">
+                    <button class="btn btn-primary mt-3">
                         Thanh toán
                     </button>
                 </a>
                 <h2 style="color:red">Tổng tiền thanh toán là: ${requestScope.totalMoney} VNĐ</h2>
             </div>
         </c:if>
-        <c:if test="${empty requestScope.items}">
-            <h1>Giỏ hàng trống</h1>
-        </c:if>
-
+        <div class="container my-3">
+            <c:if test="${empty requestScope.items}">
+                <h1>Giỏ hàng trống</h1>
+            </c:if>
+        </div>
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
     </body>

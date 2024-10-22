@@ -14,15 +14,13 @@
         <title>JSP Page</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-        <link rel="stylesheet" href="client/css/style.css">
+        <link rel="stylesheet" href="/Shop/client/css/style.css">
     </head>
     <body>
         <!--header-->
         <%@ include file="header.jsp" %>
         <!--header-->
         <!--main-->
-
-        <h1>${requestScope.customer.customerName}</h1>
         <div class="container mt-3">
             <h1>
                 Danh sách sản phẩm
@@ -97,9 +95,10 @@
                                 <div class="card-body">
                                     <h5 class="card-title">${c.name}</h5>
                                     <p>${c.getPriceVND()} VNĐ</p>
-                                    <a href="detail?id=${c.id}">
+                                    <a href="detail/${c.id}">
                                         <i class="fa-solid fa-eye"></i>
                                     </a>
+
                                     <a href="add-cart?id=${c.id}">
                                         <i class="fa-solid fa-cart-shopping"></i>
                                     </a>
@@ -112,7 +111,7 @@
             </div>
 
         </main>
-        <%@include file='comment.jsp' %>
+        <%--<%@include file='comment.jsp' %>--%>
         <!--main-->
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>

@@ -12,10 +12,11 @@ import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import model.Comment;
-import model.Customer;
+import model.ColorProduct;
+import model.User;
 import model.Item;
-import model.Order;
+import model.OrderItem;
+import model.OrderDetail;
 
 import model.Product;
 
@@ -26,13 +27,13 @@ import model.Product;
 public class DAO extends DBContext {
 
     public List<Category> getAll() {
-        String sql = "select *from Categories";
+        String sql = "select *from Category";
         List<Category> list = new ArrayList<>();
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                Category c = new Category(rs.getInt("id"), rs.getString("name"), rs.getString("describe"));
+                Category c = new Category(rs.getInt("id"), rs.getString("name"), rs.getString("description"));
                 list.add(c);
             }
         } catch (Exception ex) {
@@ -42,14 +43,15 @@ public class DAO extends DBContext {
     }
 
     public List<Product> getAllProducts() {
-        String sql = "select *from products";
+        String sql = "select *from Product";
         List<Product> list = new ArrayList<>();
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Product p = new Product(rs.getString("id"), rs.getString("name"), rs.getInt("quantity"), rs.getDouble("price"),
-                        rs.getDate("releaseDate"), rs.getString("describe"), rs.getString("image"), getCategoryByID(rs.getInt("cid")));
+                        rs.getDate("releaseDate"), rs.getString("image"), rs.getDate("createdAt"), rs.getDate("updatedAt"), rs.getString("status"),
+                        rs.getDouble("discountPercentage"), rs.getString("promotion"), rs.getString("warranty"), rs.getInt("deleted"), getCategoryByID(rs.getInt("categoryId")));
                 list.add(p);
             }
         } catch (Exception ex) {
@@ -59,14 +61,14 @@ public class DAO extends DBContext {
     }
 
     public Category getCategoryByID(int id) {
-        String sql = "select *from Categories where id=?";
+        String sql = "select *from Category where id=?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, id);
             ResultSet rs = st.executeQuery();
             Category c;
             if (rs.next()) {
-                c = new Category(rs.getInt("id"), rs.getString("name"), rs.getString("describe"));
+                c = new Category(rs.getInt("id"), rs.getString("name"), rs.getString("description"));
                 return c;
             }
         } catch (Exception ex) {
@@ -83,12 +85,15 @@ public class DAO extends DBContext {
         return listRes;
     }
 
-    public List<Product> getProductbyCIDandPrice(int id, String radioPrice) {
-        String sql = "select *from products where 1=1";
+    public List<Product> getProductbyCondition(int id, String radioPrice, String keyword) {
+        String sql = "select *from Product where 1=1";
         List<Product> list = new ArrayList();
         try {
             if (id != 0) {
-                sql += " and cid=" + id;
+                sql += " and categoryId=" + id;
+            }
+            if (keyword != null && !keyword.equals("")) {
+                sql += "and name like '%" + keyword + "%'";
             }
             if (radioPrice != null && !radioPrice.equals("")) {
                 switch (radioPrice) {
@@ -107,30 +112,8 @@ public class DAO extends DBContext {
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 Product p = new Product(rs.getString("id"), rs.getString("name"), rs.getInt("quantity"), rs.getDouble("price"),
-                        rs.getDate("releaseDate"), rs.getString("describe"), rs.getString("image"), getCategoryByID(id));
-                list.add(p);
-
-            }
-        } catch (Exception ex) {
-
-        }
-        return list;
-    }
-
-    public List<Product> getProductbyKey(String key) {
-        String sql = "select *from products where 1=1";
-        List<Product> list = new ArrayList();
-        try {
-
-            if (key != null && !key.equals("")) {
-                sql += "and name like '%" + key + "%'";
-            }
-            PreparedStatement st = connection.prepareStatement(sql);
-
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Product p = new Product(rs.getString("id"), rs.getString("name"), rs.getInt("quantity"), rs.getDouble("price"),
-                        rs.getDate("releaseDate"), rs.getString("describe"), rs.getString("image"), getCategoryByID(rs.getInt("cid")));
+                        rs.getDate("releaseDate"), rs.getString("image"), rs.getDate("createdAt"), rs.getDate("updatedAt"), rs.getString("status"),
+                        rs.getDouble("discountPercentage"), rs.getString("promotion"), rs.getString("warranty"), rs.getInt("deleted"), getCategoryByID(rs.getInt("categoryId")));
                 list.add(p);
 
             }
@@ -172,7 +155,7 @@ public class DAO extends DBContext {
     }
 
     public Product getProduct(String id) {
-        String sql = "select *from products where id=?";
+        String sql = "select *from Product where id=?";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -180,24 +163,84 @@ public class DAO extends DBContext {
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
                 Product p = new Product(rs.getString("id"), rs.getString("name"), rs.getInt("quantity"), rs.getDouble("price"),
-                        rs.getDate("releaseDate"), rs.getString("describe"), rs.getString("image"), getCategoryByID(rs.getInt("cid")));
+                        rs.getDate("releaseDate"), rs.getString("image"), rs.getDate("createdAt"), rs.getDate("updatedAt"), rs.getString("status"),
+                        rs.getDouble("discountPercentage"), rs.getString("promotion"), rs.getString("warranty"), rs.getInt("deleted"), getCategoryByID(rs.getInt("categoryId")));
                 return p;
             }
         } catch (Exception ex) {
 
         }
         return null;
+
     }
 
-    public Customer getCustomerByEmail(String email) {
-        String sql = "select *from Customer where email=?";
+    public List<ColorProduct> getColorsProduct(String id) {
+        String sql = "SELECT ColorOfProduct.colorId,name,image from ColorOfProduct join Color\n"
+                + "on ColorOfProduct.colorId=Color.id and ColorOfProduct.productId=?";
+        List<ColorProduct> list = new ArrayList();
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, id);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                list.add(new ColorProduct(rs.getInt("colorId"), rs.getString("name"), rs.getString("image")));
+            }
+            return list;
+        } catch (Exception ex) {
+
+        }
+        return null;
+    }
+
+    public String getColorName(int id) {
+        String sql = "select *from Color where id=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                String color = rs.getString("name");
+                return color;
+            }
+        } catch (Exception ex) {
+
+        }
+        return null;
+    }
+
+    public String getColorImage(int id) {
+        String sql = "select *from ColorOfProduct where colorId=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                String image = rs.getString("image");
+                return image;
+            }
+        } catch (Exception ex) {
+
+        }
+        return null;
+    }
+
+    public User getUserByEmail(String email) {
+        String sql = "SELECT [id]\n"
+                + "      ,[fullName]\n"
+                + "      ,[password]\n"
+                + "      ,[token]\n"
+                + "      ,[email]\n"
+                + "      ,[avatar]\n"
+                + "      ,[cartId]\n"
+                + "  FROM [dbo].[Users]\n"
+                + "  where email=?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, email);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                Customer c = new Customer(rs.getInt("customerID"), rs.getString("customerName"),
-                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"));
+                User c = new User(rs.getInt("id"), rs.getString("fullName"),
+                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"), rs.getString("cartId"));
                 return c;
             }
 
@@ -208,37 +251,46 @@ public class DAO extends DBContext {
         }
         return null;
     }
+//
+//    public Customer getCustomerByID(int customerID) {
+//        String sql = "select *from Customer where customerID=?";
+//        try {
+//            PreparedStatement st = connection.prepareStatement(sql);
+//            st.setInt(1, customerID);
+//            ResultSet rs = st.executeQuery();
+//            if (rs.next()) {
+//                Customer c = new Customer(rs.getInt("customerID"), rs.getString("customerName"),
+//                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"));
+//                return c;
+//            }
+//
+//            return null;
+//
+//        } catch (Exception ex) {
+//
+//        }
+//        return null;
+//    }
+//
 
-    public Customer getCustomerByID(int customerID) {
-        String sql = "select *from Customer where customerID=?";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, customerID);
-            ResultSet rs = st.executeQuery();
-            if (rs.next()) {
-                Customer c = new Customer(rs.getInt("customerID"), rs.getString("customerName"),
-                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"));
-                return c;
-            }
-
-            return null;
-
-        } catch (Exception ex) {
-
-        }
-        return null;
-    }
-
-    public Customer getCustomer(String email, String password) {
-        String sql = "select *from Customer where email=? and password=?";
+    public User getUser(String email, String password) {
+        String sql = "SELECT [id]\n"
+                + "      ,[fullName]\n"
+                + "      ,[password]\n"
+                + "      ,[token]\n"
+                + "      ,[email]\n"
+                + "      ,[avatar]\n"
+                + "      ,[cartId]\n"
+                + "  FROM [dbo].[Users]\n"
+                + "  where email=? and password=?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, email);
             st.setString(2, password);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                Customer c = new Customer(rs.getInt("customerID"), rs.getString("customerName"),
-                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"));
+                User c = new User(rs.getInt("id"), rs.getString("fullName"),
+                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"), rs.getString("cartId"));
                 return c;
             }
 
@@ -250,42 +302,18 @@ public class DAO extends DBContext {
         return null;
     }
 
-    public int getQuantityRecords(String keyword) {
+    public int getOrderId(String keyword) {
         switch (keyword) {
-            case "Admin" -> {
-                String sql = "select count(*)from Admin";
+            case "OrderDetail" -> {
+                String sql = "SELECT TOP 1 [id]\n"
+                        + "FROM [ShopPhone].[dbo].[OrderDetail]\n"
+                        + "ORDER BY [id] DESC;";
                 try {
                     PreparedStatement st = connection.prepareStatement(sql);
                     ResultSet rs = st.executeQuery();
                     if (rs.next()) {
-                        int count = rs.getInt(1);
-                        return count;
-                    }
-                } catch (Exception ex) {
-
-                }
-            }
-            case "Customer" -> {
-                String sql = "select count(*)from Customer";
-                try {
-                    PreparedStatement st = connection.prepareStatement(sql);
-                    ResultSet rs = st.executeQuery();
-                    if (rs.next()) {
-                        int count = rs.getInt(1);
-                        return count;
-                    }
-                } catch (Exception ex) {
-
-                }
-            }
-            case "Orders" -> {
-                String sql = "select count(*)from Orders";
-                try {
-                    PreparedStatement st = connection.prepareStatement(sql);
-                    ResultSet rs = st.executeQuery();
-                    if (rs.next()) {
-                        int count = rs.getInt(1);
-                        return count;
+                        int orderId = rs.getInt(1);
+                        return orderId;
                     }
                 } catch (Exception ex) {
 
@@ -310,42 +338,53 @@ public class DAO extends DBContext {
         return 0;
     }
 
-    public void insertCustomertoDB(Customer c) {
-        String sql = "INSERT INTO [dbo].[Customer]\n"
-                + "           ([customerName]\n"
+    public void inserUsertoDB(String fullName, String password, String token, String email, String cartId) {
+        String sql = "INSERT INTO [dbo].[Users]\n"
+                + "           ([fullName]\n"
                 + "           ,[password]\n"
                 + "           ,[token]\n"
                 + "           ,[email]\n"
-                + "           ,[avatar])\n"
+                + "           ,[avatar]\n"
+                + "           ,[cartId])\n"
                 + "     VALUES\n"
-                + "           (?"
-                + "           ,?"
-                + "           ,?"
-                + "           ,?"
+                + "           (?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
                 + "           ,?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, c.getCustomerName());
-            st.setString(2, c.getPassword());
-            st.setString(3, c.getToken());  // Sửa lại thứ tự cho đúng
-            st.setString(4, c.getEmail());   // Sửa lại thứ tự cho đúng
-            st.setString(5, c.getAvatar());
+            st.setString(1, fullName);
+            st.setString(2, password);
+            st.setString(3, token);  // Sửa lại thứ tự cho đúng
+            st.setString(4, email);   // Sửa lại thứ tự cho đúng
+            st.setString(5, "");
+            st.setString(6, cartId);
             st.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();  // In lỗi ra để dễ dàng theo dõi vấn đề
         }
     }
 
-    public Customer getCustomerByToken(String token) {
+    public User getUserByToken(String token) {
 
-        String sql = "select *from Customer where token=?";
+        String sql = "SELECT [id]\n"
+                + "      ,[fullName]\n"
+                + "      ,[password]\n"
+                + "      ,[token]\n"
+                + "      ,[email]\n"
+                + "      ,[avatar]\n"
+                + "      ,[cartId]\n"
+                + "  FROM [dbo].[Users]\n"
+                + "  where token=?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setString(1, token);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                Customer c = new Customer(rs.getInt("customerID"), rs.getString("customerName"),
-                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"));
+                User c = new User(rs.getInt("id"), rs.getString("fullName"),
+                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"), rs.getString("cartId"));
                 return c;
             }
 
@@ -358,41 +397,38 @@ public class DAO extends DBContext {
 
     }
 
-    public void insertOrdertoDB(Order o) {
-        String sql = "INSERT INTO [dbo].[Orders]\n"
-                + "           ([orderId]\n"
-                + "           ,[customerId]\n"
-                + "           ,[fullname]\n"
+    public void insertOrdertoDB(OrderDetail o) {
+        String sql = "INSERT INTO [dbo].[OrderDetail]\n"
+                + "           ([userId]\n"
+                + "           ,[fullName]\n"
                 + "           ,[address]\n"
                 + "           ,[phone]\n"
-                + "           ,[totalMoney])\n"
+                + "           ,[totalPayment])\n" // Đã chỉnh sửa
                 + "     VALUES\n"
                 + "           (?\n"
                 + "           ,?\n"
                 + "           ,?\n"
                 + "           ,?\n"
-                + "           ,?\n"
-                + "           ,?)";
+                + "           ,?);"; // Đã chỉnh sửa
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, o.getOrderId());
-            st.setInt(2, o.getCustomerID());
-            st.setString(3, o.getFullName());
-            st.setString(4, o.getAddress());
-            st.setString(5, o.getPhone());
-            st.setDouble(6, o.getTotalMoney());
+            st.setInt(1, o.getUserId());
+            st.setString(2, o.getFullName());
+            st.setString(3, o.getAddress());
+            st.setString(4, o.getPhone());
+            st.setDouble(5, o.getTotalPayment());
             st.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void insert_OrderProducttoDB(Item item, int OrderProductId, int OrderId) {
-        String sql = "INSERT INTO [dbo].[OrderProduct]\n"
-                + "           ([orderProductId]\n"
-                + "           ,[productId]\n"
+    public void insertOneItemtoDB(Item item, int orderId) {
+        String sql = "INSERT INTO [dbo].[Item]\n"
+                + "           ([productId]\n"
                 + "           ,[quantity]\n"
-                + "           ,[orderId])\n"
+                + "           ,[orderId]\n"
+                + "           ,[colorId])\n"
                 + "     VALUES\n"
                 + "           (?\n"
                 + "           ,?\n"
@@ -400,110 +436,95 @@ public class DAO extends DBContext {
                 + "           ,?)";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, OrderProductId);
-            st.setString(2, item.getProduct().getId());
-            st.setInt(3, item.getQuantity());
-            st.setInt(4, OrderId);
+            st.setString(1, item.getProduct().getId());
+            st.setInt(2, item.getQuantity());
+            st.setInt(3, orderId);
+            st.setInt(4, item.getColorId());
             st.executeUpdate();
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
-    public void insert_ListOrderProducttoDB(List<Item> items, int OrderId) {
+//
+    public void insertItemstoDB(List<Item> items) {
         for (Item item : items) {
-            int countOrderProductInDB = getQuantityRecords("OrderProduct");
-            insert_OrderProducttoDB(item, countOrderProductInDB, OrderId);
+            int orderId=getOrderId("OrderDetail");
+            insertOneItemtoDB(item, orderId);
         }
     }
 
-    public List<Item> getOrderByCustomerId(int customerId) {
-        String sql = "select *from Orders where customerId=?";
+    public List<OrderDetail> getOrderByUserId(int userId) {
+        String sql = "SELECT [id]\n"
+                + "      ,[userId]\n"
+                + "      ,[fullName]\n"
+                + "      ,[address]\n"
+                + "      ,[phone]\n"
+                + "      ,[totalPayment]\n"
+                + "      ,[createAt]\n"
+                + "      ,[updatedAt]\n"
+                + "  FROM [dbo].[OrderDetail]\n"
+                + "  where userId=?";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, customerId);
+            st.setInt(1, userId);
             ResultSet rs1 = st.executeQuery();
-            List<Item> items = new ArrayList<>();
+            List<OrderDetail> orders = new ArrayList<>();
             while (rs1.next()) {
-                int orderId = rs1.getInt("orderId");
-                sql = "select productId,quantity from OrderProduct where orderId=?";
+                List<Item> items = new ArrayList<>();
+                int orderId = rs1.getInt("id");
+                sql = "SELECT [id]\n"
+                        + "      ,[productId]\n"
+                        + "      ,[quantity]\n"
+                        + "      ,[orderId]\n"
+                        + "      ,[colorId]\n"
+                        + "      ,[createAt]\n"
+                        + "      ,[updatedAt]\n"
+                        + "  FROM [dbo].[Item]\n"
+                        + "  where orderId=?";
                 st = connection.prepareStatement(sql);
                 st.setInt(1, orderId);
 
                 ResultSet rs2 = st.executeQuery();
                 while (rs2.next()) {
-                    Item item = new Item(getProduct(rs2.getString("productId")), rs2.getInt("quantity"));
+                    String colorName = getColorName(rs2.getInt("colorId"));
+                    String image = getColorImage(rs2.getInt("colorId"));
+                    Item item = new Item(getProduct(rs2.getString("productId")),
+                            rs2.getInt("quantity"), rs2.getInt("colorId"), colorName, image);
                     items.add(item);
                 }
+                OrderDetail o = new OrderDetail(userId, rs1.getString("fullName"), rs1.getString("address"), rs1.getString("phone"), rs1.getDouble("totalPayment"));
+                o.setOrderId(orderId);
+                o.setList(items);
+                orders.add(o);
 
             }
-            return items;
+            return orders;
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
     }
 
-    public void setProductInDB(List<Product> listP) {
-        try {
-            for (Product p : listP) {
-                String sql = "UPDATE products SET quantity=? where id=?";
-                PreparedStatement st = connection.prepareStatement(sql);
-                st.setInt(1, p.getQuantity());
-                st.setString(2, p.getId());
-                st.executeUpdate();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public void insertCommentToDB(int customerID, String comment) {
-        String sql = "INSERT INTO [dbo].[Comments]\n"
-                + "           ([content], [customerID])\n" // Thêm dấu ngoặc đóng sau phần cột
-                + "     VALUES\n"
-                + "           (?, ?)";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setString(1, comment);
-            st.setInt(2, customerID);
-            st.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    public List<Comment> getAllComment() {
-        List<Comment> list = new ArrayList<>();
-        String sql = "select * from Comments order by createAt desc";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Comment a = new Comment(rs.getInt("commentID"),
-                        rs.getInt("customerID"), rs.getString("content"), rs.getDate("createAt"), rs.getDate("updateAt"));
-                list.add(a);
-            }
-            return list;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-    public void deleteComment(int commentID){
-
-        String sql = "delete from Comments where commentID=?";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
-            st.setInt(1, commentID);
-            st.executeUpdate();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+//    public void setProductInDB(List<Product> listP) {
+//        try {
+//            for (Product p : listP) {
+//                String sql = "UPDATE product SET quantity=? where id=?";
+//                PreparedStatement st = connection.prepareStatement(sql);
+//                st.setInt(1, p.getQuantity());
+//                st.setString(2, p.getId());
+//                st.executeUpdate();
+//            }
+//        } catch (Exception ex) {
+//            ex.printStackTrace();
+//        }
+//    }
     public static void main(String[] args) {
         DAO d = new DAO();
-        d.deleteComment(8);
-        
+        List<OrderDetail> list = d.getOrderByUserId(1);
+        for (OrderDetail o : list) {
+            System.out.println(o);
+        }
+
     }
 }

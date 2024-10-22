@@ -34,9 +34,9 @@ public class Cart {
         this.items = items;
     }
 
-    public Item getItemById(String id) {
+    public Item getItemById(String id, int colorId) {
         for (int i = 0; i < items.size(); i++) {
-            if (items.get(i).getProduct().getId().equals(id)) {
+            if (items.get(i).getProduct().getId().equals(id) && items.get(i).getColorId() == colorId) {
                 return items.get(i);
             }
         }
@@ -53,17 +53,17 @@ public class Cart {
     }
 
     public void addItem(Item t) {
-        if (getItemById(t.getProduct().getId()) != null) {
-            Item m = getItemById(t.getProduct().getId());
+        if (getItemById(t.getProduct().getId(), t.getColorId()) != null) {
+            Item m = getItemById(t.getProduct().getId(), t.getColorId());
             m.setQuantity(t.getQuantity() + m.getQuantity());
         } else {
             items.add(t);
         }
     }
 
-    public void removeItem(String id) {
-        if (getItemById(id) != null) {
-            items.remove(getItemById(id));
+    public void removeItem(String id, int colorId) {
+        if (getItemById(id, colorId) != null) {
+            items.remove(getItemById(id, colorId));
         }
     }
 
@@ -83,18 +83,33 @@ public class Cart {
     public Cart(String txt) {
         DAO d = new DAO();
         items = new ArrayList<>();
-        System.out.println(txt);
         String a[] = txt.split("-");
 
         for (String s : a) {
-            Product p = d.getProduct(s);
-            if (p != null) {
-                addItem(new Item(p, 1));
+            String b[] = s.split("\\$");
+
+            if (b.length >= 2) {
+                Product p = d.getProduct(b[0]);
+                int colorId = Integer.parseInt(b[1]);
+                String color=d.getColorName(colorId);
+                String image="";
+                List<ColorProduct>colorsProduct=d.getColorsProduct(b[0]);
+                for(ColorProduct c :colorsProduct){
+                    if(c.getColorId()==colorId){
+                        image=c.getImage();
+                    }
+                }
+                if (p != null) {
+                    addItem(new Item(p, 1, colorId,color,image));
+                }
             }
         }
     }
 
     public static void main(String[] args) {
-
+        Cart cart = new Cart("ip16$2-ip16$3");
+        for (Item i : cart.getItems()) {
+            System.out.println(i);
+        }
     }
 }

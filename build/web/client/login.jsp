@@ -47,10 +47,6 @@
                                     <label for="Password">Password</label>
                                     <input value="${requestScope.password}" type="password" class="form-control" id="Password" name="password">
                                 </div>
-                                <div class="form-group form-check">
-                                    <input type="checkbox"  class="form-check-input" id="exampleCheck1" name="checkBox" value="1">
-                                    <label class="form-check-label" for="exampleCheck1">Remember Me</label>
-                                </div>
 
 
                                 <button type="submit" class="btn btn-primary">Đăng nhập</button>

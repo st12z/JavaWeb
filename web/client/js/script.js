@@ -11,8 +11,10 @@ if (buttonCid) {
             const cid = button.getAttribute("dataCategory-id");
             if (cid != 0) {
                 url.searchParams.set("cid", cid);
+                url.searchParams.delete("keyword");
             } else {
                 url.searchParams.delete("cid");
+
             }
             const page = url.searchParams.get("page");
             url.searchParams.set("page", 1);
@@ -67,4 +69,40 @@ if (radioPrice) {
         });
     });
 }
+
+const buttonColor = document.querySelectorAll(".inner-color");
+const formCart = document.querySelector("[form-cart]");
+
+if (formCart) {
+    const inputColor = formCart.querySelector("input[name='colorId']");
+    let colorActive = document.querySelector(".inner-color.active");
+
+    // Nếu có colorActive, gán giá trị của nó cho input
+    if (colorActive) {
+        const colorId = colorActive.getAttribute("colorId");
+        inputColor.value = colorId;
+    }
+
+    if (buttonColor) {
+        buttonColor.forEach(button => {
+            button.addEventListener("click", () => {
+                
+                buttonColor.forEach(button=>{
+                    button.classList.remove("active");
+                })
+                // Cập nhật giá trị cho input
+                button.classList.add("active");
+                const colorId = button.getAttribute("colorId");
+                console.log(colorId);
+                inputColor.value=colorId;
+            });
+        });
+    }
+ 
+}
+
+
+
+
+
 

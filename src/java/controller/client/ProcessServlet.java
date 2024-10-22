@@ -64,56 +64,61 @@ public class ProcessServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String id = request.getParameter("id");
+        String colorId_raw = request.getParameter("colorId");
         String action = request.getParameter("action");
-        DAO d = new DAO();
-        Cookie arr[] = request.getCookies();
-        String txt = "";
-        String cartID = "";
-        HttpSession session = request.getSession();
-        if (arr != null) {
-            for (Cookie o : arr) {
-                if (o.getName().equals("cartID")) {
-                    cartID = o.getValue();
-                    break;
+        try {
+            int colorId=Integer.parseInt(colorId_raw);
+            DAO d = new DAO();
+            Cookie arr[] = request.getCookies();
+            String txt = "";
+            String cartId = "";
+            if (arr != null) {
+                for (Cookie o : arr) {
+                    if (o.getName().equals("cartId")) {
+                        cartId = o.getValue();
+                        break;
+                    }
+                }
+                for (Cookie o : arr) {
+                    if (o.getName().equals("cart-" + cartId)) {
+                        txt += o.getValue();
+                        o.setMaxAge(0);
+                        response.addCookie(o);
+                    }
                 }
             }
-            for (Cookie o : arr) {
-                if (o.getName().equals("cart-" + cartID)) {
-                    txt += o.getValue();
-                    o.setMaxAge(0);
-                    response.addCookie(o);
+            Cart cart = new Cart(txt);
+            List<Item> list = cart.getItems();
+            Item t = cart.getItemById(id, colorId);
+            if (action.equals("desc")) {
+                if (t != null && t.getQuantity() > 1) {
+                    t.setQuantity(t.getQuantity() - 1);
+                } else {
+                    if (list.contains(t)) {
+                        list.remove(t);
+                    }
                 }
-            }
-        }
-        Cart cart = new Cart(txt);
-        List<Item> list = cart.getItems();
-        Item t = cart.getItemById(id);
-        if (action.equals("desc")) {
-            if (t != null && t.getQuantity() > 1) {
-                t.setQuantity(t.getQuantity() - 1);
+            } else if (action.equals("incr")) {
+                t.setQuantity(t.getQuantity() + 1);
             } else {
-                if (list.contains(t)) {
-                    list.remove(t);
+                list.remove(t);
+            }
+            txt = "";
+            for (Item i : list) {
+                for (int j = 0; j < i.getQuantity(); j++) {
+                    txt += i.getProduct().getId() +"$"+i.getColorId()+ "-";
                 }
             }
-        } else if (action.equals("incr")) {
-            t.setQuantity(t.getQuantity() + 1);
-        } else {
-            list.remove(t);
-        }
-        txt = "";
-        for (Item i : list) {
-            for (int j = 0; j < i.getQuantity(); j++) {
-                txt += i.getProduct().getId() + "-";
+            request.setAttribute("items", list);
+            response.addCookie(new Cookie("cart-" + cartId, txt));
+            if (!list.isEmpty()) {
+                cart.setItems(list);
+                response.sendRedirect("/Shop/cart");
+            } else {
+                response.sendRedirect("/Shop/home");
             }
-        }
-        request.setAttribute("items", list);
-        response.addCookie(new Cookie("cart-" + cartID, txt));
-        if (!list.isEmpty()) {
-            cart.setItems(list);
-            response.sendRedirect("cart");
-        } else {
-            response.sendRedirect("home");
+        } catch (Exception e) {
+
         }
     }
 

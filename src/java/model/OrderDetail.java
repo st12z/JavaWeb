@@ -4,43 +4,94 @@
  */
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author T
  */
 public class OrderDetail {
-    private int OrderId;
-    private int productId;
-    private int quantity;
+    private int orderId;
+    private int userId;
+    private String fullName;
+    private String address;
+    private String phone;
+    private double totalPayment;
+    List<Item> list = new ArrayList<>();
+    public OrderDetail(int userId, String fullName, String address, String phone, double totalPayment) {
+        this.userId = userId;
+        this.fullName = fullName;
+        this.address = address;
+        this.phone = phone;
+        this.totalPayment = totalPayment;
+    }
 
-    public OrderDetail(int OrderId, int productId, int quantity) {
-        this.OrderId = OrderId;
-        this.productId = productId;
-        this.quantity = quantity;
+    public List<Item> getList() {
+        return list;
+    }
+
+    public void setList(List<Item> list) {
+        this.list = list;
+    }
+    
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public void setTotalPayment(double totalPayment) {
+        this.totalPayment = totalPayment;
     }
 
     public int getOrderId() {
-        return OrderId;
+        return orderId;
     }
 
-    public int getProductId() {
-        return productId;
+    public int getUserId() {
+        return userId;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public String getFullName() {
+        return fullName;
     }
 
-    public void setOrderId(int OrderId) {
-        this.OrderId = OrderId;
+    public String getAddress() {
+        return address;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public double getTotalPayment() {
+        return totalPayment;
     }
+    public String getTotalMoneyVND() {
+        return helper.helperClass.moneyVND(totalPayment);
+
+    }
+    @Override
+    public String toString() {
+        return "OrderDetail{" + "orderId=" + orderId + ", userId=" + userId + ", fullName=" + fullName + ", address=" + address + ", phone=" + phone + ", totalPayment=" + totalPayment + ", list=" + list + '}';
+    }
+
+    
+    
     
 }

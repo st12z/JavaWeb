@@ -12,23 +12,28 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <link rel="stylesheet" href="client/css/style.css">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+        <link rel="stylesheet" href="/Shop/client/css/style.css">
+    </head>
+    <style>
 
-              </head>
-        <style>
-
-            td{
-                border:1px solid chocolate;
-            }
-            th{
-                border:1px solid chocolate;
-            }
-        </style>
+        td{
+            border:1px solid chocolate;
+        }
+        th{
+            border:1px solid chocolate;
+        }
+    </style>
     <body>
 
-
+        <%@include file="header.jsp" %>
         <a href="home">Home</a>
+        <c:if test="${requestScope.error!=null}">
+            <div class="alert alert-danger" role="alert" alert-cart>
+                ${requestScope.error}
+            </div>  
+        </c:if>
         <div class="container mt-3 ">
             <div class="row ">
                 <div class="col-12">
@@ -49,7 +54,7 @@
                                     <tr>
                                         <td>${status.index+1}</td>
                                         <td>${i.product.name}</td>
-                                        <td><img src="${i.product.image}" alt="image" style="width:80px"/></td>
+                                        <td><img src="${i.image}" alt="image" style="width:80px"/></td>
                                         <td>${i.product.getPriceVND()} VNĐ</td>
                                         <td>${i.quantity}</td>
                                         <td>${i.getMoneyVND()} VNĐ</td>
@@ -66,17 +71,17 @@
                 <form method="POST" action="payment">
                     <div class="form-group">
                         <label for="fullname">FullName</label>
-                        <input value="${requestScope.Order.fullName}" type="fullname" class="form-control" id="fullname" name="fullname" aria-describedby="fullname">
+                        <input type="fullname" class="form-control" id="fullname" name="fullname" aria-describedby="fullname">
                     </div>
                     <div class="form-group">
                         <label for="address">Address</label>
-                        <input value="${requestScope.Order.address}" type="text" class="form-control" id="address" name="address">
+                        <input  type="text" class="form-control" id="address" name="address">
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone</label>
-                        <input value="${requestScope.Order.phone}" type="text" class="form-control" id="phone" name="phone">
+                        <input  type="text" class="form-control" id="phone" name="phone">
                     </div>
-                    <button ${not empty requestScope.Order ? 'disabled' : ''} type="submit" class="btn btn-primary">Thanh toán</button>
+                    <button  type="submit" class="btn btn-primary">Thanh toán</button>
 
                 </form>
             </div>

@@ -9,6 +9,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/CascadeStyleSheet.css
 
 .header{
     margin-top:20px;
+    border-bottom:1px solid #ddd;
 }
 .header .search{
     input{
@@ -57,4 +58,12 @@ table{
 .info-customer img{
     width:30px;
     margin-right: 10px;
+}
+.card{
+    height: 500px;
+}
+.card-img-top{
+    width: 286px;
+    height: 286px;
+    object-fit: cover;
 }

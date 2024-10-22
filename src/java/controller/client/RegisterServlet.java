@@ -10,20 +10,19 @@ import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.Part;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import model.Customer;
+import model.User;
 
 /**
  *
  * @author T
  */
-
 @MultipartConfig
 @WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
 public class RegisterServlet extends HttpServlet {
@@ -78,49 +77,31 @@ public class RegisterServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String username = request.getParameter("username");
+        String fullName = request.getParameter("fullName");
         String password = request.getParameter("password");
         String email = request.getParameter("email");
+        String token = helper.helperClass.generateToken(10);
+        String cartId = helper.helperClass.generateToken(10);
         DAO d = new DAO();
-        Customer c = d.getCustomerByEmail(email);
+        User user = d.getUserByEmail(email);
         try {
 
-            if (c != null) {
+            if (user != null) {
                 request.setAttribute("error", "Tài khoản đã tồn tại");
+                request.getRequestDispatcher("/client/register.jsp").forward(request, response);
             } else {
-                PrintWriter out = response.getWriter();
-                Customer a = new Customer();
-                Part file = request.getPart("file");
-                String fileName =file.getSubmittedFileName();
-                String uploadPath="C:/Users/T/Documents/NetBeansProjects/Shop/web/client/images/"+fileName;
-                try{
-                    FileOutputStream fos=new FileOutputStream(uploadPath);
-                    InputStream is=file.getInputStream();
-                    byte[] data = new byte[is.available()];
-                    is.read(data);
-                    fos.write(data);
-                    fos.close();
-                }catch(Exception e){
-                    
-                }
-                a.setCustomerName(username);
-                a.setPassword(password);
-                a.setToken(helper.helperClass.generateToken(10));
-                a.setEmail(email);
-                a.setAvatar("client/images/"+fileName);
-                request.setAttribute("success", "Đăng kí thành công");
-                d.insertCustomertoDB(a);
+                d.inserUsertoDB(fullName, password, token, email, cartId);
+                response.sendRedirect("/Shop/login");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        request.getRequestDispatcher("client/register.jsp").forward(request, response);
 
     }
+
     /**
      * Returns a short description of the servlet.
      *

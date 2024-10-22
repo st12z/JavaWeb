@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import model.Cart;
 import model.Category;
-import model.Comment;
-import model.Customer;
+import model.User;
 import model.Item;
 import model.Product;
 
@@ -28,7 +27,8 @@ import model.Product;
  * @author T
  */
 @WebServlet(name = "HomeServlet", urlPatterns = {"/home"})
-public class HomeServlet extends HttpServlet { 
+public class HomeServlet extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -68,65 +68,43 @@ public class HomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAO d = new DAO();
-        
-        
-        
-        List<Category> listC = d.getAll();
+        List<Category> listC =d.getAll();
+        String keyword=request.getParameter("keyword");
         String cid_raw = request.getParameter("cid");
         String sortKey = request.getParameter("sortKey");
         String sortValue = request.getParameter("sortValue");
         String currentPage_raw = request.getParameter("page");
-        String radioPrice=request.getParameter("price");
+        String radioPrice = request.getParameter("price");
         try {
+            // Tạo cartId giỏ hàng
+            String cartId="";
+            Cookie arr[]= request.getCookies();
+            if(arr!=null){
+                for(Cookie o:arr){
+                    if(o.getName().equals("cartId")){
+                        cartId=o.getValue();
+                        break;
+                    }
+                }
+            }
+            if(cartId.equals("")){
+                cartId=helper.helperClass.generateToken(10);
+                response.addCookie(new Cookie("cartId",cartId));
+            }
+            
+            // end tạo cartId
+            // Lọc theo danh mục
             int cid = 0;
             if (cid_raw != null && !cid_raw.equals("")) {
                 cid = Integer.parseInt(cid_raw);
             }
-            Cookie[] arr = request.getCookies();
-            String txt = "";
-            String cartID="";
-            String token="";
-            if (arr != null) {
-                for(Cookie o :arr){
-                    if(o.getName().equals("token")){
-                        token=o.getValue();
-                        break;
-                    }
-                }
-                for(Cookie o :arr){
-                    if(o.getName().equals("cartID")){
-                        cartID=o.getValue();
-                        break;
-                    }
-                }
-                if(cartID.equals("")){
-                    cartID=helper.helperClass.generateToken(10);
-                    Cookie cartCookie = new Cookie("cartID", cartID);
-                    response.addCookie(cartCookie);
-                }
-                for (Cookie o : arr) {
-                    if (o.getName().equals("cart-"+cartID)) {
-                        txt += o.getValue();
-                        break;
-                    }
-                }
-                
-            }
-            Customer c;
-            if(token!=null){
-                 c= d.getCustomerByToken(token);
-            }
-            else{
-                c=null;
-            }
-            Cart cart = new Cart(txt);
-            List<Item> items = cart.getItems();
-            List<Product> listP = new ArrayList<>();
-            listP = d.getProductbyCIDandPrice(cid,radioPrice);
+            List<Product> listP = d.getProductbyCondition(cid, radioPrice, keyword);
+            // Pagination
             int countProducts = listP.size();
-            int totalPage = countProducts / 4 + (countProducts % 4 == 0 ? 0 : 1);
             int currentPage = 1;
-            int limitItem = 4;
+            int limitItem = 6;
+            int totalPage = countProducts / limitItem + (countProducts % limitItem == 0 ? 0 : 1);
+            
             if (currentPage_raw != null && !currentPage_raw.equals("")) {
                 currentPage = Integer.parseInt(currentPage_raw);
             }
@@ -135,30 +113,51 @@ public class HomeServlet extends HttpServlet {
             if (end > listP.size()) {
                 end = countProducts;
             }
+            // End Pagination
+            
+            // Check login
+            String token="";
+            if(arr!=null){
+                for(Cookie o:arr){
+                    if(o.getName().equals("token")){
+                        token=o.getValue();
+                        break;
+                    }
+                }
+            }
+            User user=d.getUserByToken(token);
+            // End check login
+            
+            //sort price
             String conditionSort = "";
             if (sortKey != null && sortValue != null) {
                 listP = d.sortProduct(listP, sortKey, sortValue);
                 conditionSort = sortKey + "-" + sortValue;
             }
-            int countItemOfOrder=0;
-            if(c!=null){
-                countItemOfOrder=d.getOrderByCustomerId(c.getId()).size();
-            }
-            
-            List<Comment> listComment=d.getAllComment();
             
             List<Product> listbyPage = d.getListByPage((ArrayList<Product>) listP, begin, end);
-            request.setAttribute("listComment", listComment);
+           
             request.setAttribute("conditionSort", conditionSort);
             request.setAttribute("currentPage", currentPage);
             request.setAttribute("totalPage", totalPage);
+            // active pagination
             request.setAttribute("cid", cid_raw);
+            
+            // return categories
             request.setAttribute("categories", listC);
+            
+            // return products
             request.setAttribute("products", listbyPage);
-            request.setAttribute("items", items);
-            request.setAttribute("Customer", c);
+            
+
+            // active radioprice
             request.setAttribute("radioPrice", radioPrice);
-            request.setAttribute("countItems", countItemOfOrder);
+            
+            request.setAttribute("keyword",keyword);
+            
+            // user
+            request.setAttribute("User", user);
+
             request.getRequestDispatcher("client/home.jsp").forward(request, response);
         } catch (Exception e) {
 

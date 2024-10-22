@@ -37,10 +37,10 @@
                         <div class="card" style="width: 30rem;">
                             <div class="card-body" align>
                                 <h5 class="card-title">Đăng kí tài khoản</h5>
-                                <form method="POST" action="register" enctype="multipart/form-data">
+                                <form method="POST" action="register">
                                     <div class="form-group">
                                         <label for="username">UserName</label>
-                                        <input type="username" class="form-control" id="username" name="username" required aria-describedby="userHelp">
+                                        <input type="username" class="form-control" id="username" name="fullName" required aria-describedby="userHelp">
                                     </div>
                                     <div class="form-group">
                                         <label for="exampleInputEmail1">Email address</label>
@@ -49,10 +49,6 @@
                                     <div class="form-group">
                                         <label for="exampleInputPassword1">Password</label>
                                         <input type="password" class="form-control" required id="exampleInputPassword1" name="password">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Avatar</label>
-                                        <input type="file" accept="image/*" class="form-control" name="file" placeholder="Enter photo">
                                     </div>
                                     <button type="submit" class="btn btn-primary">Đăng ký</button>
                                 </form>
