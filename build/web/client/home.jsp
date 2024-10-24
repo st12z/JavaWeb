@@ -19,12 +19,11 @@
     <body>
         <!--header-->
         <%@ include file="header.jsp" %>
+        <%@ include file='banner.jsp' %>
+        <%@include file="contact.jsp" %>
         <!--header-->
         <!--main-->
         <div class="container mt-3">
-            <h1>
-                Danh sách sản phẩm
-            </h1>
             <ul class="nav nav-tabs">
                 <li class="nav-item ">
                     <a class="nav-link ${cid==null?"active":""}"  dataCategory-id="0">ALL</a>
@@ -111,6 +110,7 @@
             </div>
 
         </main>
+        <%@include file="footer.jsp" %>
         <%--<%@include file='comment.jsp' %>--%>
         <!--main-->
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

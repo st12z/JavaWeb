@@ -22,7 +22,9 @@
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/dal/UserDao.java</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/payment.jsp</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/model/Item.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/LogoutServlet.java</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/register.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/LoginServlet.java</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/login.jsp</file>
         </group>
     </open-files>

@@ -71,15 +71,15 @@
                 <form method="POST" action="payment">
                     <div class="form-group">
                         <label for="fullname">FullName</label>
-                        <input type="fullname" class="form-control" id="fullname" name="fullname" aria-describedby="fullname">
+                        <input type="fullname" class="form-control" id="fullname" name="fullname" aria-describedby="fullname" required>
                     </div>
                     <div class="form-group">
                         <label for="address">Address</label>
-                        <input  type="text" class="form-control" id="address" name="address">
+                        <input  type="text" class="form-control" id="address" name="address" required>
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone</label>
-                        <input  type="text" class="form-control" id="phone" name="phone">
+                        <input  type="text" class="form-control" id="phone" name="phone" required>
                     </div>
                     <button  type="submit" class="btn btn-primary">Thanh toán</button>
 
