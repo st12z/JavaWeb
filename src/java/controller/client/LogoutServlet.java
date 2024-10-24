@@ -73,6 +73,10 @@ public class LogoutServlet extends HttpServlet {
                     o.setMaxAge(0);
                     response.addCookie(o);
                 }
+                if(o.getName().equals("cartId")){
+                    o.setMaxAge(0);
+                    response.addCookie(o);
+                }
             }
         }
         response.sendRedirect("home");

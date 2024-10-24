@@ -30,7 +30,6 @@
                 <div class="cart">
                     <a href="/Shop/cart">
                         <i class="fa-solid fa-cart-shopping"></i>
-                        <span>(${requestScope.items.size()})</span>
                     </a>
                 </div>
             </div>
@@ -38,9 +37,6 @@
                 <div class="order">
                     <a href="/Shop/order">
                         <i class="fa-solid fa-truck-fast"></i>
-                        <c:if test="{${requestScope.countItems}}">
-                            <span>${requestScope.countItems}</span>
-                        </c:if>
                     </a>
                 </div>
             </div>
@@ -61,7 +57,7 @@
                     <a href="/Shop/logout">Logout</a>
                 </div> 
             </c:if>
-            <c:if test="${requestScope.Customer==null}" >
+            <c:if test="${requestScope.User==null}" >
                 <div class="col-1">
                     <a href="/Shop/register">Register</a>
                 </div> 

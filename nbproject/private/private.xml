@@ -4,17 +4,26 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/detail.jsp</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/js/script.js</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/dal/DAO.java</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/payment.jsp</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/register.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/model/OrderDetail.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/dal/ProductDao.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/dal/OrderDao.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/cart.jsp</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/AddToCartServlet.java</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/LoginServlet.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/HomeServlet.java</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/header.jsp</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/DetailProductServlet.java</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/login.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/order.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/dal/ColorDao.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/DetailOrderServlet.java</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/PaymentServlet.java</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/model/User.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/model/Cart.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/js/script.js</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/model/OrderItem.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/dal/UserDao.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/payment.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/model/Item.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/register.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/login.jsp</file>
         </group>
     </open-files>
 </project-private>

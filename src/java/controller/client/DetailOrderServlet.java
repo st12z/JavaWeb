@@ -75,6 +75,8 @@ public class DetailOrderServlet extends HttpServlet {
             }
 
         }
+
+        User user = d.getUserByToken(token);
         if (token.equals("")) {
             request.setAttribute("error", "Bạn cần đăng nhập để xem đơn hàng!");
             request.getRequestDispatcher("client/order.jsp").forward(request, response);
@@ -83,6 +85,7 @@ public class DetailOrderServlet extends HttpServlet {
         User c = d.getUserByToken(token);
         int userId = c.getId();
         List<OrderDetail> orders = d.getOrderByUserId(userId);
+        request.setAttribute("User", user);
         request.setAttribute("orders", orders);
         request.getRequestDispatcher("client/order.jsp").forward(request, response);
     }

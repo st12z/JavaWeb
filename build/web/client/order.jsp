@@ -27,7 +27,6 @@
 
     <body>
         <%@ include file="header.jsp" %>
-        <a href="home">Quay lại</a>
         <div class="container">
             <c:if test="${not empty requestScope.orders}">
                 <c:forEach items="${requestScope.orders}" var="o" varStatus="status">
