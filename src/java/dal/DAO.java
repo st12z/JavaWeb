@@ -22,7 +22,7 @@ import model.Product;
 
 /**
  *
- * @author T
+ * @author Thuc
  */
 public class DAO extends DBContext {
 
