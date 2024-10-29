@@ -30,6 +30,8 @@
     </style>
     <body>
         <%@ include file="header.jsp" %>
+        <%@ include file='banner.jsp' %>
+        <%@include file="contact.jsp" %>
         <c:if test="${not empty requestScope.items}">
 
             <div class="container my-3">
@@ -67,7 +69,7 @@
                                         </td>
                                         <td>
                                             <a href="process?id=${i.product.id}&action=delete&colorId=${i.colorId}">
-                                                <button class="btn btn-warning">Delete</button>
+                                                <button class="btn btn-info"><i class="fa-solid fa-trash-can"></i></button>
                                             </a>
                                         </td>
                                     </tr>

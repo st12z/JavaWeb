@@ -24,6 +24,7 @@
         <!--header-->
         <!--main-->
         <div class="container mt-3">
+            
             <ul class="nav nav-tabs">
                 <li class="nav-item ">
                     <a class="nav-link ${cid==null?"active":""}"  dataCategory-id="0">ALL</a>
@@ -90,17 +91,13 @@
                     <c:forEach items="${requestScope.products}" var="c">
                         <div class="col-xl-4 col-lg-4 col-sm-4 col-12 mb-3">
                             <div class="card" style="width:18rem;">
-                                <img src="${c.image}" alt="logo" class="card-img-top">
+                                <a href="detail/${c.id}">
+                                    <img src="${c.image}" alt="logo" class="card-img-top">
+                                </a>
                                 <div class="card-body">
                                     <h5 class="card-title">${c.name}</h5>
                                     <p>${c.getPriceVND()} VNĐ</p>
-                                    <a href="detail/${c.id}">
-                                        <i class="fa-solid fa-eye"></i>
-                                    </a>
 
-                                    <a href="add-cart?id=${c.id}">
-                                        <i class="fa-solid fa-cart-shopping"></i>
-                                    </a>
                                 </div>
                             </div>
                         </div>

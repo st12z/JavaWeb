@@ -26,9 +26,10 @@
         }
     </style>
     <body>
-
+        
         <%@include file="header.jsp" %>
-        <a href="home">Home</a>
+        <%@ include file='banner.jsp' %>
+        <%@include file="contact.jsp" %>
         <c:if test="${requestScope.error!=null}">
             <div class="alert alert-danger" role="alert" alert-cart>
                 ${requestScope.error}

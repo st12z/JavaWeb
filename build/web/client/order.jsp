@@ -27,6 +27,8 @@
 
     <body>
         <%@ include file="header.jsp" %>
+        <%@ include file='banner.jsp' %>
+        <%@include file="contact.jsp" %>
         <div class="container">
             <c:if test="${not empty requestScope.orders}">
                 <c:forEach items="${requestScope.orders}" var="o" varStatus="status">

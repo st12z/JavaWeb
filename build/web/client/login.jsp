@@ -26,7 +26,9 @@
 
 
         </style>
-        <%@include file='header.jsp' %>
+        <%@ include file="header.jsp" %>
+        <%@ include file='banner.jsp' %>
+        <%@include file="contact.jsp" %>
         <div class="container mb-3">
             <div class="form-login">
                 <div class="row">

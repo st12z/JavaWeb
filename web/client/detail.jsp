@@ -17,6 +17,8 @@
         <link rel="stylesheet" href="/Shop/client/css/style.css">
     </head>
     <body>
+        <%@ include file="header.jsp" %>
+
         <style>
             .inner-image{
                 aspect-ratio:1/1;
@@ -41,9 +43,14 @@
                 background: orange;
             }
         </style>
-        <%@ include file="header.jsp" %>
+
         <main>
             <div class="container mt-3">
+                <c:if test="${requestScope.error!=null}">
+                    <div class="alert alert-danger" role="alert" alert-cart>
+                        ${requestScope.error}
+                    </div>  
+                </c:if>
                 <h2 class="mt-3 mb-3">Thông tin sản phẩm</h2>
                 <div class="row">
                     <div class="col-xl-5 col-lg-5 col-sm-5 col-12 ">
@@ -88,7 +95,7 @@
                             </div>
 
                             <div class="button-buy">
-                                <form method="POST" form-cart action="/Shop/add-cart/${requestScope.product.id}">
+                                <form method="POST" form-cart action="/Shop/add-cart/${requestScope.product.id}" productId="${requestScope.product.id}">
                                     <input value="" type="text" hidden name="colorId"/>
                                     <button class="btn btn-primary" type="submit">
                                         Thêm vào giỏ hàng

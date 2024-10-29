@@ -12,6 +12,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 import model.ColorProduct;
 import model.Product;
@@ -61,24 +62,34 @@ public class DetailProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
 
+        // Kiểm tra và lấy lỗi từ session nếu có
+        String error = (String) session.getAttribute("error");
+        if (error != null) {
+            // Gửi lỗi tới trang JSP
+            request.setAttribute("error", error);
+
+            // Xóa lỗi khỏi session sau khi hiển thị
+            session.removeAttribute("error");
+        }
         String pathInfo = request.getPathInfo(); // Lấy thông tin đường dẫn
         if (pathInfo != null && pathInfo.matches("/\\w+")) { // Kiểm tra ID có dạng /id
             String productId = pathInfo.substring(1); // Lấy ID sản phẩm (bỏ dấu "/")
             DAO d = new DAO();
-            Product p =d.getProduct(productId);
-            List<ColorProduct>colorsProduct=d.getColorsProduct(productId);
+            Product p = d.getProduct(productId);
+            List<ColorProduct> colorsProduct = d.getColorsProduct(productId);
             Cookie[] arr = request.getCookies();
-            String token="";
-            if(arr!=null){
-                for(Cookie o:arr){
-                    if(o.getName().equals("token")){
-                        token=o.getValue();
+            String token = "";
+            if (arr != null) {
+                for (Cookie o : arr) {
+                    if (o.getName().equals("token")) {
+                        token = o.getValue();
                         break;
                     }
                 }
             }
-            User user=d.getUserByToken(token);
+            User user = d.getUserByToken(token);
             request.setAttribute("product", p);
             request.setAttribute("User", user);
             request.setAttribute("colorsProduct", colorsProduct);

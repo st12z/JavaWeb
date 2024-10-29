@@ -13,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.Product;
 
 /**
@@ -60,7 +61,7 @@ public class AddToCartServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        
     }
 
     /**
@@ -74,6 +75,7 @@ public class AddToCartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
         String pathInfo = request.getPathInfo(); // Lấy thông tin đường dẫn
         if (pathInfo != null && pathInfo.matches("/\\w+")) { // Kiểm tra ID có dạng /id
             String productId = pathInfo.substring(1); // Lấy ID sản phẩm (bỏ dấu "/")
@@ -105,11 +107,12 @@ public class AddToCartServlet extends HttpServlet {
             } else {
                 txt += productId+"$"+colorId + "-";
             }
+            session.setAttribute("error", "Bạn đã đặt hàng thành công!");
             Cookie c = new Cookie("cart-" + cartId, txt);
             c.setMaxAge(2 * 24 * 60 * 60);
             c.setPath("/Shop");
             response.addCookie(c);
-            response.sendRedirect("/Shop/home");
+            response.sendRedirect("/Shop/detail/"+productId);
             // End thêm product vào cartId
         }
 

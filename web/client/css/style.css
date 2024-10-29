@@ -138,3 +138,6 @@ table{
   height: 50px;
   object-fit: cover;
 }
+[cart-success].hidden{
+    display:none;
+}
