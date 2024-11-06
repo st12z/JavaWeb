@@ -251,27 +251,6 @@ public class DAO extends DBContext {
         }
         return null;
     }
-//
-//    public Customer getCustomerByID(int customerID) {
-//        String sql = "select *from Customer where customerID=?";
-//        try {
-//            PreparedStatement st = connection.prepareStatement(sql);
-//            st.setInt(1, customerID);
-//            ResultSet rs = st.executeQuery();
-//            if (rs.next()) {
-//                Customer c = new Customer(rs.getInt("customerID"), rs.getString("customerName"),
-//                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"));
-//                return c;
-//            }
-//
-//            return null;
-//
-//        } catch (Exception ex) {
-//
-//        }
-//        return null;
-//    }
-//
 
     public User getUser(String email, String password) {
         String sql = "SELECT [id]\n"
@@ -449,7 +428,7 @@ public class DAO extends DBContext {
 //
     public void insertItemstoDB(List<Item> items) {
         for (Item item : items) {
-            int orderId=getOrderId("OrderDetail");
+            int orderId = getOrderId("OrderDetail");
             insertOneItemtoDB(item, orderId);
         }
     }
@@ -506,25 +485,41 @@ public class DAO extends DBContext {
         return null;
     }
 
-//    public void setProductInDB(List<Product> listP) {
-//        try {
-//            for (Product p : listP) {
-//                String sql = "UPDATE product SET quantity=? where id=?";
-//                PreparedStatement st = connection.prepareStatement(sql);
-//                st.setInt(1, p.getQuantity());
-//                st.setString(2, p.getId());
-//                st.executeUpdate();
-//            }
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//        }
-//    }
+    public void updateUser(User u, String fullName, String email, String avatar) {
+        String sql = "UPDATE [dbo].[Users]\n"
+                + "   SET [fullName] = ?\n"
+                + "      ,[email] = ?\n"
+                + "      ,[avatar] = ?\n"
+                + " WHERE token=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setNString(1, fullName);
+            st.setString(2, email);
+            st.setString(3, avatar);
+            st.setString(4, u.getToken());
+            st.executeUpdate();
+        } catch (Exception ex) {
+
+        }
+    }
+
+    public void updatePassword(User u, String password) {
+        String sql = "UPDATE [dbo].[Users]\n"
+                + "   SET [password] = ?\n"
+                + " WHERE token=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, password);
+            st.setString(2, u.getToken());
+            st.executeUpdate();
+        } catch (Exception ex) {
+
+        }
+    }
+
     public static void main(String[] args) {
         DAO d = new DAO();
-        List<OrderDetail> list = d.getOrderByUserId(1);
-        for (OrderDetail o : list) {
-            System.out.println(o);
-        }
-
+        User u = d.getUserByEmail("thuc@gmail.com");
+        System.out.println(u.getAvatar());
     }
 }

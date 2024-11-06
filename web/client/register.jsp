@@ -21,21 +21,16 @@
         <%@ include file='banner.jsp' %>
         <%@include file="contact.jsp" %>
         <div class="container mt-3 "  >
+            <c:if test="${requestScope.error!=null}">
+                <div class="alert alert-danger" role="alert" alert-cart>
+                    ${requestScope.error}
+                </div>  
+            </c:if>
             <div class="form-register d-flex justify-content-center">
 
                 <div class="row d-flex ">
 
-                    <div class="col-12 ">
-                        <c:if test="${requestScope.success!=null}">
-                            <div class="alert alert-success alert-register" role="alert" alert-cart>
-                                ${requestScope.success}
-                            </div>  
-                        </c:if>
-                        <c:if test="${requestScope.error!=null}">
-                            <div class="alert alert-danger" role="alert" alert-cart>
-                                ${requestScope.error}
-                            </div>  
-                        </c:if>
+                    <div class="col-12 "> 
                         <div class="card" style="width: 30rem;">
                             <div class="card-body" align>
                                 <h5 class="card-title">Đăng kí tài khoản</h5>

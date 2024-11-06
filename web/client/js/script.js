@@ -70,74 +70,6 @@ if (radioPrice) {
     });
 }
 
-//function getCookie(name) {
-//    const value = `; ${document.cookie}`;
-//    const parts = value.split(`; ${name}=`);
-//    if (parts.length === 2) {
-//        return parts.pop().split(';').shift();
-//    }
-//    return null; // Nếu không tìm thấy cookie
-//}
-//function setCookie(name, value, days = 7) {
-//    const date = new Date();
-//    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000)); // Chuyển ngày thành thời gian
-//    const expires = `expires=${date.toUTCString()}`;
-//    document.cookie = `${name}=${value}; ${expires}; path=/`;
-//}
-//function deleteCookie(name) {
-//    // Đặt cookie với giá trị rỗng và thời gian hết hạn trong quá khứ
-//    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
-//}
-//const buttonColor = document.querySelectorAll(".inner-color");
-//const formCart = document.querySelector("[form-cart]");
-//const messageCart=document.querySelector("[cart-success]");
-//if (formCart) {
-//    const inputColor = formCart.querySelector("input[name='colorId']");
-//    let colorActive = document.querySelector(".inner-color.active");
-//
-//    // Nếu có colorActive, gán giá trị của nó cho input
-//    if (colorActive) {
-//        const colorId = colorActive.getAttribute("colorId");
-//        inputColor.value = colorId;
-//    }
-//    if (buttonColor) {
-//        buttonColor.forEach(button => {
-//            button.addEventListener("click", () => {
-//                buttonColor.forEach(button => {
-//                    button.classList.remove("active");
-//                })
-//                // Cập nhật giá trị cho input
-//                button.classList.add("active");
-//                const colorId = button.getAttribute("colorId");
-//                inputColor.value = colorId;
-//            });
-//        });
-//    }
-//    ;
-//    const productId = formCart.getAttribute("productId");
-//
-//    formCart.addEventListener("submit", (e) => {
-//        e.preventDefault();
-//        const cartId = getCookie("cartId");
-//        const cart_store = getCookie("cart-" + cartId);
-//        let newCartValue;
-//        if (!cart_store) {
-//            
-//            newCartValue = productId + "$" + inputColor.value + "-";
-//        } else {
-//            deleteCookie("cart-" + cartId);
-//            newCartValue = cart_store + productId + "$" + inputColor.value + "-";
-//        }
-//        messageCart.innerHTML="Đã đặt hàng thành công!";
-//        messageCart.classList.remove("hidden");
-//        setCookie("cart-" + cartId, newCartValue);
-//        console.log("Updated cart cookie:", getCookie("cart-" + cartId));
-//        
-////        addCart();
-//    });
-//
-//}
-//;
 const buttonColor = document.querySelectorAll(".inner-color");
 const formCart = document.querySelector("[form-cart]");
 
@@ -167,4 +99,16 @@ if (formCart) {
         });
     }
  
+}
+const uploadImage = document.querySelector("[upload-image]");
+console.log(uploadImage);
+if (uploadImage) {
+  const inputFile = uploadImage.querySelector("[upload-image-input]");
+  inputFile.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    const imgSrc = uploadImage.querySelector(".image-preview");
+    if (file) {
+      imgSrc.src = URL.createObjectURL(file);
+    }
+  });
 }

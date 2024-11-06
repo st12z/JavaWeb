@@ -14,18 +14,21 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.File;
+import jakarta.servlet.http.Part;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import model.User;
 
 /**
  *
  * @author T
  */
+@WebServlet(name = "DetailUserServlet", urlPatterns = {"/detail-user"})
 @MultipartConfig
-@WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
-public class RegisterServlet extends HttpServlet {
+public class DetailUserServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +47,10 @@ public class RegisterServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RegisterServlet</title>");
+            out.println("<title>Servlet DetailUserServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RegisterServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DetailUserServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,41 +68,70 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("client/register.jsp").forward(request, response);
+        Cookie arr[] = request.getCookies();
+        String token = "";
+        if (arr != null) {
+            for (Cookie o : arr) {
+                if (o.getName().equals("token")) {
+                    token = o.getValue();
+                    break;
+                }
+            }
+        }
+        DAO d = new DAO();
+        User user = d.getUserByToken(token);
+        request.setAttribute("User", user);
+        request.getRequestDispatcher("/client/detail-user.jsp").forward(request, response);
     }
 
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param is
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String fullName = request.getParameter("fullName");
-        String password = request.getParameter("password");
+        String fullName = request.getParameter("fullname");
         String email = request.getParameter("email");
-        String token = helper.helperClass.generateToken(10);
-        String cartId = helper.helperClass.generateToken(10);
-        DAO d = new DAO();
-        User user = d.getUserByEmail(email);
-        try {
+        // Đọc file avatar từ request
+        Part avatarPart = request.getPart("avatar");
+        String avatarFileName = avatarPart.getSubmittedFileName();
+        String uploadPath = "C:/Users/T/Documents/NetBeansProjects/Shop/web/client/images/" + avatarFileName;
+        System.out.println(uploadPath);
 
-            if (user != null) {
-                request.setAttribute("error", "Email đã tồn tại!");
-                request.getRequestDispatcher("client/register.jsp").forward(request, response);
-            } else {
-                d.inserUsertoDB(fullName, password, token, email, cartId);
-                response.sendRedirect("/Shop/login");
+        // Lấy token từ cookie
+        String token = "";
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("token")) {
+                    token = cookie.getValue();
+                    break;
+                }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
 
+        // Lấy thông tin user từ token và cập nhật vào database
+        DAO dao = new DAO();
+        User user = dao.getUserByToken(token);
+        
+        try{
+            FileOutputStream fos=new FileOutputStream(uploadPath);
+            InputStream is=avatarPart.getInputStream();
+            byte[] data= new byte[is.available()];
+            is.read(data);
+            fos.write(data);
+            fos.close();
+        }catch(Exception e){
+            System.out.println(e);
+        }
+        dao.updateUser(user, fullName, email,"client/images/"+ avatarFileName);
+
+        // Chuyển hướng về trang chi tiết user
+        response.sendRedirect("/Shop/detail-user");
     }
 
     /**

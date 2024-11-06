@@ -8,21 +8,21 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div class="header">
     <div class="container">
-        <div class="row">
-            <div class="col-xl-3 col-lg-3 col-sm-3 col-12">
+        <div class="row align-items-center">
+            <div class="col-xl-2 col-lg-2 col-sm-2 col-12">
                 <div class="inner-logo">
-                    <a href="/Shop/home"><img src="/Shop/client/images/icon-logo.png" alt="logo"/></a>
+                    <a href="/Shop/home"><img style="width:150px" src="/Shop/client/images/logo-shop.png" alt="logo"/></a>
                 </div>
             </div>
-            <div class="col-xl-3 col-lg-3 col-sm-3 col-12">
+
+            <div class="col-xl-5 col-lg-5 col-sm-5 col-12">
                 <div class="search">
                     <form id="form-search" action="home">
-                        <input type="text" placeholder="Hôm nay bạn cần tìm gì" name="keyword" value="${requestScope.keyword}"/>
-                        <button type="submit">
-                            <i class="fa-solid fa-magnifying-glass"></i>
+                        <input class="form-control" type="text" placeholder="Hôm nay bạn cần tìm gì" name="keyword" value="${requestScope.keyword}"/>
+                        <button button-search type="submit">
+                            <i  class="fa-solid fa-magnifying-glass"></i>
                         </button>
                     </form>
-
                 </div>
             </div>
 
@@ -40,31 +40,27 @@
                     </a>
                 </div>
             </div>
-            <div class="col-xl-2 col-lg-2 col-sm-2 col-12">
-                <c:if test="${requestScope.User!=null}" >
-                    <a href="info-customer">
-                        <span class="bade badge-warning">${requestScope.User.fullName}</span>
-                    </a>
+
+            <div class="col-xl-3 col-lg-3 col-sm-3 col-12 text-right">
+                <c:if test="${requestScope.User != null}">
+                    <div class="dropdown">
+                        <img src="${requestScope.User.avatar}" class="dropdown-toggle" 
+                             data-toggle="dropdown" aria-expanded="false" 
+                             style="width:40px"/>
+                        <div class="dropdown-menu">
+                            <span class="btn btn-sm btn-info text-center">${requestScope.User.fullName}</span>
+                            <a class="dropdown-item" href="/Shop/detail-user">Chi tiết tài khoản</a>
+                            <a class="dropdown-item" href="/Shop/change-password">Đổi mật khẩu</a>
+                            <a class="dropdown-item" href="/Shop/logout">Logout</a>
+                        </div>
+                    </div>
                 </c:if> 
-            </div>            
-            <c:if test="${requestScope.User==null}" >
-                <div class="col-1">
-                    <a href="/Shop/login">Login</a>
-                </div> 
-            </c:if>
-            <c:if test="${requestScope.User!=null}" >
-                <div class="col-1">
-                    <a href="/Shop/logout">Logout</a>
-                </div> 
-            </c:if>
-            <c:if test="${requestScope.User==null}" >
-                <div class="col-1">
-                    <a href="/Shop/register">Register</a>
-                </div> 
-            </c:if>           
-
-
-
+                
+                <c:if test="${requestScope.User == null}">
+                    <a href="/Shop/login" class="btn btn-outline-primary btn-sm mr-2">Login</a>
+                    <a href="/Shop/register" class="btn btn-outline-secondary btn-sm">Register</a>
+                </c:if>
+            </div>
         </div>
     </div>
 </div>

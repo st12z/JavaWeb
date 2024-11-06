@@ -10,7 +10,7 @@ package model;
  */
 public class User {
     private int id ;
-    private String fullName,password,token,email,avatar="",cartId;
+    private String fullName,password,token,email,avatar,cartId;
 
     public User( int id,String fullName, String password, String token, String email, String avatar, String cartId) {
         this.id=id;

@@ -33,8 +33,12 @@
         <%@ include file='banner.jsp' %>
         <%@include file="contact.jsp" %>
         <c:if test="${not empty requestScope.items}">
-
             <div class="container my-3">
+                <c:if test="${requestScope.error!=null}">
+                    <div class="alert alert-danger" role="alert" alert-cart>
+                        ${requestScope.error}
+                    </div>  
+                </c:if>
                 <h1 class="mb-3">Thông tin giỏ hàng</h1>
                 <div class="row">
                     <div class="col-12">

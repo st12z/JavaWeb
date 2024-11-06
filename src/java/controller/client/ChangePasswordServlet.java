@@ -8,24 +8,19 @@ import dal.DAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import model.User;
 
 /**
  *
  * @author T
  */
-@MultipartConfig
-@WebServlet(name = "RegisterServlet", urlPatterns = {"/register"})
-public class RegisterServlet extends HttpServlet {
+@WebServlet(name = "ChangePasswordServlet", urlPatterns = {"/change-password"})
+public class ChangePasswordServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -44,10 +39,10 @@ public class RegisterServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet RegisterServlet</title>");
+            out.println("<title>Servlet ChangePasswordServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet RegisterServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ChangePasswordServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,13 +60,25 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("client/register.jsp").forward(request, response);
+        Cookie arr[] = request.getCookies();
+        String token = "";
+        if (arr != null) {
+            for (Cookie o : arr) {
+                if (o.getName().equals("token")) {
+                    token = o.getValue();
+                    break;
+                }
+            }
+        }
+        DAO d = new DAO();
+        User user = d.getUserByToken(token);
+        request.setAttribute("User", user);
+        request.getRequestDispatcher("/client/change-password.jsp").forward(request, response);
     }
 
     /**
      * Handles the HTTP <code>POST</code> method.
      *
-     * @param is
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -80,26 +87,33 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String fullName = request.getParameter("fullName");
-        String password = request.getParameter("password");
-        String email = request.getParameter("email");
-        String token = helper.helperClass.generateToken(10);
-        String cartId = helper.helperClass.generateToken(10);
-        DAO d = new DAO();
-        User user = d.getUserByEmail(email);
-        try {
-
-            if (user != null) {
-                request.setAttribute("error", "Email đã tồn tại!");
-                request.getRequestDispatcher("client/register.jsp").forward(request, response);
-            } else {
-                d.inserUsertoDB(fullName, password, token, email, cartId);
-                response.sendRedirect("/Shop/login");
+        Cookie arr[] = request.getCookies();
+        String token = "";
+        if (arr != null) {
+            for (Cookie o : arr) {
+                if (o.getName().equals("token")) {
+                    token = o.getValue();
+                    break;
+                }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
-
+        String passwordCurrent = request.getParameter("passwordCurrent");
+        String passwordNew1 = request.getParameter("passwordNew1");
+        String passwordNew2 = request.getParameter("passwordNew2");
+        DAO d = new DAO();
+        User user = d.getUserByToken(token);
+        if(!user.getPassword().equals(passwordCurrent)){
+            request.setAttribute("error", "Mật khẩu hiện tại không đúng!");
+            request.getRequestDispatcher("client/change-password.jsp");
+            return;
+        }
+        if(!passwordNew1.equals(passwordNew2)){
+            request.setAttribute("error", "Mật khẩu bạn nhập không trùng!");
+            request.getRequestDispatcher("client/change-password.jsp").forward(request, response);
+            return;
+        }
+        d.updatePassword(user, passwordNew1);
+        response.sendRedirect("/Shop/detail-user");
     }
 
     /**
