@@ -586,7 +586,7 @@ public class DAO extends DBContext {
         }
     }
     public ArrayList<Review> getAllReview(String productId){
-        String sql = "select * from Review where productId=?";
+        String sql = "select * from Review where productId=? order by createdAt desc";
         ArrayList<Review> list = new ArrayList();
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -594,7 +594,7 @@ public class DAO extends DBContext {
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 list.add(new Review(getProduct(rs.getString("productId")), 
-                        getUserById(rs.getInt("id")), rs.getNString("content"), rs.getInt("rating"),rs.getDate("createdAt")));
+                        getUserById(rs.getInt("userId")), rs.getNString("content"), rs.getInt("rating"),rs.getDate("createdAt")));
             }
             return list;
         } catch (Exception ex) {

@@ -13,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.Date;
 import model.Review;
 import model.Statics;
@@ -63,6 +64,17 @@ public class AddReview extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+
+        // Kiểm tra và lấy lỗi từ session nếu có
+        String error = (String) session.getAttribute("error");
+        if (error != null) {
+            // Gửi lỗi tới trang JSP
+            request.setAttribute("error", error);
+
+            // Xóa lỗi khỏi session sau khi hiển thị
+            session.removeAttribute("error");
+        }
         processRequest(request, response);
     }
 
@@ -91,17 +103,27 @@ public class AddReview extends HttpServlet {
                 }
             }
         }
-        User user = d.getUserByToken(token);
-        try {
-            int rating = Integer.parseInt(rating_raw);
-            java.util.Date utilDate = new Date();
-            Review r = new Review(d.getProduct(productId), user, description, rating,new java.sql.Date(utilDate.getTime()));
-            d.insertReview(r);
-            String url_redirect="/Shop/detail/"+productId;
+        if (token.equals("")) {
+            HttpSession session = request.getSession();
+            session.setAttribute("error", "Vui lòng đăng nhập để đánh giá!");
+            String url_redirect = "/Shop/detail/" + productId;
             response.sendRedirect(url_redirect);
-        } catch (Exception ex) {
-            System.out.println(ex);
+
+        } else {
+            User user = d.getUserByToken(token);
+
+            try {
+                int rating = Integer.parseInt(rating_raw);
+                java.util.Date utilDate = new Date();
+                Review r = new Review(d.getProduct(productId), user, description, rating, new java.sql.Date(utilDate.getTime()));
+                d.insertReview(r);
+                String url_redirect = "/Shop/detail/" + productId;
+                response.sendRedirect(url_redirect);
+            } catch (Exception ex) {
+                System.out.println(ex);
+            }
         }
+
     }
 
     /**

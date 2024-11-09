@@ -185,7 +185,7 @@
                             <div class="person-review" person-review="feedback.id">
                                 <div class="inner-info">
                                     <div class="inner-avatar">
-                                        <img review-avatar src="/Shop/${requestScope.User.avatar}" width="50px" />
+                                        <img review-avatar src="/Shop/${feedback.user.avatar}" width="50px" />
                                     </div>
                                     <div class="inner-name">
                                         <p>${feedback.user.fullName}</p>

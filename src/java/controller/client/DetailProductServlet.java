@@ -98,6 +98,7 @@ public class DetailProductServlet extends HttpServlet {
                 System.out.println("Product: " + p);
                 System.out.println("ColorsProduct: " + colorsProduct);
                 System.out.println("Statics: " + statics);
+                System.out.println(listReview);
                 User user = d.getUserByToken(token);
                 request.setAttribute("statics", statics);
                 request.setAttribute("product", p);
