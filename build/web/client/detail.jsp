@@ -76,6 +76,12 @@
                                 </a>
                             </div>
                         </div>
+                        <div class="inner-button mt-3">
+                            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#staticBackdrop">
+                                Xem thông số kĩ thuật
+                            </button>
+                        </div>
+
                     </div>
                     <div class="col-xl-7 col-lg-7 col-sm-7 col-12">
                         <div class="inner-content">
@@ -101,16 +107,85 @@
                                         Thêm vào giỏ hàng
                                     </button>
                                 </form>
-
-
-
                             </div>
                         </div>
-                    </div>
-                    </main>
-                    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
-                    <script src="/Shop/client/js/script.js"></script>
-                    </body>
+                        <!-- Button trigger modal -->
 
-                    </html>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="staticBackdropLabel">
+                                            <i class="fa-solid fa-gear mr-3"></i>Thông số kỹ thuật
+                                        </h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <dl class="row">
+                                            <dt class="col-sm-4">Màn hình:</dt>
+                                            <dd class="col-sm-8">${requestScope.statics.screen}</dd>
+
+                                            <dt class="col-sm-4">Camera:</dt>
+                                            <dd class="col-sm-8">${requestScope.statics.camera}</dd>
+
+                                            <dt class="col-sm-4">Hệ điều hành:</dt>
+                                            <dd class="col-sm-8">${requestScope.statics.processor}</dd>
+
+                                            <dt class="col-sm-4">Đồ họa:</dt>
+                                            <dd class="col-sm-8">${requestScope.statics.graphics}</dd>
+
+                                            <dt class="col-sm-4">Bộ nhớ:</dt>
+                                            <dd class="col-sm-8">${requestScope.statics.battery}</dd>
+
+                                            <dt class="col-sm-4">Trọng lượng:</dt>
+                                            <dd class="col-sm-8">${requestScope.statics.weight}</dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="form-rating">
+                            <h3>Đánh giá của khách hàng</h3>
+                            <form class="form-review" action="/Shop/review" method="POST">
+                                <div class="inner-review">
+                                    <div class="inner-rating form-group">
+                                        <p>
+                                            <b>1. Đánh giá của bạn về sản phẩm</b>
+                                        </p>
+                                        <span reviewing-star class="fa fa-star" data-value="1"></span>
+                                        <span reviewing-star class="fa fa-star" data-value="2"></span>
+                                        <span reviewing-star class="fa fa-star" data-value="3"></span>
+                                        <span reviewing-star class="fa fa-star" data-value="4"></span>
+                                        <span reviewing-star class="fa fa-star" data-value="5"></span>
+                                        <input name="rating" hidden rating/>
+                                        <input name="productId" hidden value="${requestScope.productd.id}"/>
+                                    </div>
+                                    <div class="inner-content form-group">
+                                        <p>
+                                            <b>2. Cảm nhận của bạn về sản phẩm</b>
+                                        </p>
+                                        <textarea class="form-control" name="description"></textarea>
+                                    </div>
+                                    <button class="btn btn-primary" type="submit">Đánh giá</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous"></script>
+        <script src="/Shop/client/js/script.js"></script>
+    </body>
+
+</html>

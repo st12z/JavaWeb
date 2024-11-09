@@ -86,29 +86,51 @@ if (formCart) {
     if (buttonColor) {
         buttonColor.forEach(button => {
             button.addEventListener("click", () => {
-                
-                buttonColor.forEach(button=>{
+
+                buttonColor.forEach(button => {
                     button.classList.remove("active");
                 })
                 // Cập nhật giá trị cho input
                 button.classList.add("active");
                 const colorId = button.getAttribute("colorId");
                 console.log(colorId);
-                inputColor.value=colorId;
+                inputColor.value = colorId;
             });
         });
     }
- 
+
 }
 const uploadImage = document.querySelector("[upload-image]");
-console.log(uploadImage);
 if (uploadImage) {
-  const inputFile = uploadImage.querySelector("[upload-image-input]");
-  inputFile.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    const imgSrc = uploadImage.querySelector(".image-preview");
-    if (file) {
-      imgSrc.src = URL.createObjectURL(file);
-    }
-  });
+    const inputFile = uploadImage.querySelector("[upload-image-input]");
+    inputFile.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        const imgSrc = uploadImage.querySelector(".image-preview");
+        if (file) {
+            imgSrc.src = URL.createObjectURL(file);
+        }
+    });
+}
+;
+const updateStar = (value, stars) => {
+    stars.forEach((star) => {
+        const starValue = parseInt(star.getAttribute("data-value"));
+        if (starValue <= value) {
+            star.classList.add("checked");
+        } else {
+            star.classList.remove("checked");
+        }
+    });
+};
+const inputRating = document.querySelector("input[rating]");
+const reviewStars = document.querySelectorAll("[reviewing-star]");
+console.log(reviewStars);
+if (reviewStars) {
+    reviewStars.forEach((star) => {
+        star.addEventListener("click", () => {
+            const value = star.getAttribute("data-value");
+            inputRating.value = value;
+            updateStar(value, reviewStars);
+        });
+    });
 }

@@ -8,14 +8,12 @@ import dal.DAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-import java.util.List;
-import model.ColorProduct;
-import model.Product;
+import model.Review;
 import model.Statics;
 import model.User;
 
@@ -23,7 +21,8 @@ import model.User;
  *
  * @author T
  */
-public class DetailProductServlet extends HttpServlet {
+@WebServlet(name = "AddReview", urlPatterns = {"/review"})
+public class AddReview extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,10 +41,10 @@ public class DetailProductServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DetailProductServlet</title>");
+            out.println("<title>Servlet AddReview</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DetailProductServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AddReview at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -63,44 +62,7 @@ public class DetailProductServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-
-        // Kiểm tra và lấy lỗi từ session nếu có
-        String error = (String) session.getAttribute("error");
-        if (error != null) {
-            // Gửi lỗi tới trang JSP
-            request.setAttribute("error", error);
-
-            // Xóa lỗi khỏi session sau khi hiển thị
-            session.removeAttribute("error");
-        }
-        String pathInfo = request.getPathInfo(); // Lấy thông tin đường dẫn
-        if (pathInfo != null && pathInfo.matches("/\\w+")) { // Kiểm tra ID có dạng /id
-            String productId = pathInfo.substring(1); // Lấy ID sản phẩm (bỏ dấu "/")
-            DAO d = new DAO();
-            Product p = d.getProduct(productId);
-            List<ColorProduct> colorsProduct = d.getColorsProduct(productId);
-            Cookie[] arr = request.getCookies();
-            String token = "";
-            if (arr != null) {
-                for (Cookie o : arr) {
-                    if (o.getName().equals("token")) {
-                        token = o.getValue();
-                        break;
-                    }
-                }
-            }
-            Statics statics=d.getStatic(productId);
-            User user = d.getUserByToken(token);
-            request.setAttribute("statics", statics);
-            request.setAttribute("product", p);
-            request.setAttribute("User", user);
-            request.setAttribute("colorsProduct", colorsProduct);
-            request.getRequestDispatcher("/client/detail.jsp").forward(request, response);
-        } else {
-            // Nếu không có ID hợp lệ, trả về lỗi 404
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        }
+        processRequest(request, response);
     }
 
     /**
@@ -114,7 +76,30 @@ public class DetailProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String description = request.getParameter("description");
+        String rating_raw = request.getParameter("rating");
+        String productId = request.getParameter("productId");
+        DAO d = new DAO();
+        Cookie[] arr = request.getCookies();
+        String token = "";
+        if (arr != null) {
+            for (Cookie o : arr) {
+                if (o.getName().equals("token")) {
+                    token = o.getValue();
+                    break;
+                }
+            }
+        }
+        User user = d.getUserByToken(token);
+        try {
+            int rating = Integer.parseInt(rating_raw);
+            Review r = new Review(d.getProduct(productId), user, description, rating);
+            d.insertReview(r);
+            String url_redirect="/Shop/detail/"+productId;
+            response.sendRedirect(url_redirect);
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
     }
 
     /**

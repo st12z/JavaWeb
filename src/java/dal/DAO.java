@@ -19,6 +19,8 @@ import model.OrderItem;
 import model.OrderDetail;
 
 import model.Product;
+import model.Review;
+import model.Statics;
 
 /**
  *
@@ -517,9 +519,49 @@ public class DAO extends DBContext {
         }
     }
 
+    public Statics getStatic(String productId) {
+        String sql = "select * from Statics where productId=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, productId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                Statics a = new Statics(getProduct(rs.getString("productId")), rs.getString("Screen"), rs.getString("Camera"),
+                        rs.getString("Processor"), rs.getString("Graphics"),
+                        rs.getString("Storage"), rs.getString("Battery"), rs.getString("Weight"));
+                return a;
+            }
+        } catch (Exception ex) {
+
+        }
+        return null;
+    }
+
+    public void insertReview(Review r) {
+        String sql = "INSERT INTO [dbo].[Review]\n"
+                + "           ([userId]\n"
+                + "           ,[productId]\n"
+                + "           ,[content]\n"
+                + "           ,[rating])\n"
+                + "     VALUES\n"
+                + "           (?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, r.getUser().getId());
+            st.setString(2, r.getProduct().getId());
+            st.setNString(3, r.getContent());
+            st.setInt(4, r.getRating());
+            st.executeUpdate();
+        } catch (Exception ex) {
+
+        }
+    }
+
     public static void main(String[] args) {
         DAO d = new DAO();
-        User u = d.getUserByEmail("thuc@gmail.com");
-        System.out.println(u.getAvatar());
+        System.out.println(d.getStatic("ip13"));
     }
 }

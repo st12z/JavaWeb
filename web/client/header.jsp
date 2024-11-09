@@ -44,7 +44,7 @@
             <div class="col-xl-3 col-lg-3 col-sm-3 col-12 text-right">
                 <c:if test="${requestScope.User != null}">
                     <div class="dropdown">
-                        <img src="${requestScope.User.avatar}" class="dropdown-toggle" 
+                        <img src="/Shop/${requestScope.User.avatar}" class="dropdown-toggle" 
                              data-toggle="dropdown" aria-expanded="false" 
                              style="width:40px"/>
                         <div class="dropdown-menu">
