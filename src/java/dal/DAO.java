@@ -225,7 +225,33 @@ public class DAO extends DBContext {
         }
         return null;
     }
+    public User getUserById(int id) {
+        String sql = "SELECT [id]\n"
+                + "      ,[fullName]\n"
+                + "      ,[password]\n"
+                + "      ,[token]\n"
+                + "      ,[email]\n"
+                + "      ,[avatar]\n"
+                + "      ,[cartId]\n"
+                + "  FROM [dbo].[Users]\n"
+                + "  where id=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, id);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                User c = new User(rs.getInt("id"), rs.getString("fullName"),
+                        rs.getString("password"), rs.getString("token"), rs.getString("email"), rs.getString("avatar"), rs.getString("cartId"));
+                return c;
+            }
 
+            return null;
+
+        } catch (Exception ex) {
+
+        }
+        return null;
+    }
     public User getUserByEmail(String email) {
         String sql = "SELECT [id]\n"
                 + "      ,[fullName]\n"
@@ -319,7 +345,7 @@ public class DAO extends DBContext {
         return 0;
     }
 
-    public void inserUsertoDB(String fullName, String password, String token, String email, String cartId) {
+    public void inserUsertoDB(String fullName, String password, String token, String email,String avatar, String cartId) {
         String sql = "INSERT INTO [dbo].[Users]\n"
                 + "           ([fullName]\n"
                 + "           ,[password]\n"
@@ -340,7 +366,7 @@ public class DAO extends DBContext {
             st.setString(2, password);
             st.setString(3, token);  // Sửa lại thứ tự cho đúng
             st.setString(4, email);   // Sửa lại thứ tự cho đúng
-            st.setString(5, "");
+            st.setString(5, avatar);
             st.setString(6, cartId);
             st.executeUpdate();
         } catch (Exception e) {
@@ -559,9 +585,26 @@ public class DAO extends DBContext {
 
         }
     }
-
+    public ArrayList<Review> getAllReview(String productId){
+        String sql = "select * from Review where productId=?";
+        ArrayList<Review> list = new ArrayList();
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, productId);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                list.add(new Review(getProduct(rs.getString("productId")), 
+                        getUserById(rs.getInt("id")), rs.getNString("content"), rs.getInt("rating")));
+            }
+            return list;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
     public static void main(String[] args) {
         DAO d = new DAO();
-        System.out.println(d.getStatic("ip13"));
+        ArrayList<Review> list = d.getAllReview("ip13");
+        System.out.println(list);
     }
 }

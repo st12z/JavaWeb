@@ -105,15 +105,13 @@ public class ChangePasswordServlet extends HttpServlet {
         if(!user.getPassword().equals(passwordCurrent)){
             request.setAttribute("error", "Mật khẩu hiện tại không đúng!");
             request.getRequestDispatcher("client/change-password.jsp");
-            return;
         }
         if(!passwordNew1.equals(passwordNew2)){
             request.setAttribute("error", "Mật khẩu bạn nhập không trùng!");
             request.getRequestDispatcher("client/change-password.jsp").forward(request, response);
-            return;
         }
         d.updatePassword(user, passwordNew1);
-        response.sendRedirect("/Shop/detail-user");
+        response.sendRedirect("/Shop/change-password");
     }
 
     /**

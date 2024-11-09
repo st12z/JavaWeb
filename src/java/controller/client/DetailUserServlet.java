@@ -128,7 +128,13 @@ public class DetailUserServlet extends HttpServlet {
         }catch(Exception e){
             System.out.println(e);
         }
-        dao.updateUser(user, fullName, email,"client/images/"+ avatarFileName);
+        if(avatarFileName.equals("")){
+            dao.updateUser(user, fullName, email,user.getAvatar());
+        }
+        else{
+            dao.updateUser(user, fullName, email,"client/images/"+avatarFileName);
+        }
+        
 
         // Chuyển hướng về trang chi tiết user
         response.sendRedirect("/Shop/detail-user");

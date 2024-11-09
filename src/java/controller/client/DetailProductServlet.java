@@ -13,9 +13,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 import model.ColorProduct;
 import model.Product;
+import model.Review;
 import model.Statics;
 import model.User;
 
@@ -90,12 +92,15 @@ public class DetailProductServlet extends HttpServlet {
                     }
                 }
             }
+            ArrayList<Review> listReview = d.getAllReview(productId);
             Statics statics=d.getStatic(productId);
             User user = d.getUserByToken(token);
             request.setAttribute("statics", statics);
             request.setAttribute("product", p);
             request.setAttribute("User", user);
+            request.setAttribute("listRV", listReview);
             request.setAttribute("colorsProduct", colorsProduct);
+  
             request.getRequestDispatcher("/client/detail.jsp").forward(request, response);
         } else {
             // Nếu không có ID hợp lệ, trả về lỗi 404

@@ -95,7 +95,7 @@ public class AddReview extends HttpServlet {
             int rating = Integer.parseInt(rating_raw);
             Review r = new Review(d.getProduct(productId), user, description, rating);
             d.insertReview(r);
-            String url_redirect="/Shop/detail/"+productId;
+            String url_redirect="/Shop/home";
             response.sendRedirect(url_redirect);
         } catch (Exception ex) {
             System.out.println(ex);

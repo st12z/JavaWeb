@@ -13,7 +13,7 @@
         <title>JSP Page</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-        <<link rel="stylesheet" href="client/css/style.css"/>
+        <link rel="stylesheet" href="client/css/style.css"/>
     </head>
     <body>
 
@@ -30,35 +30,41 @@
         <%@ include file='banner.jsp' %>
         <%@include file="contact.jsp" %>
         <div class="container mb-3">
-            <div class="form-login">
-                <div class="row">
-                    <div clas="col-xl-6 col-lg-6 col-sm-6 col-6">
-                        <div class="card-body">
-                            <h5 class="card-title">Đăng nhập</h5>
-                            <c:if test="${requestScope.error!=null}">
-                                <div class="alert alert-danger alert-login" role="alert" alert-cart>
-                                    ${requestScope.error}
-                                </div>  
-                            </c:if>   
-                            <form action="login" method="post">
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input value="${requestScope.email}" type="text" class="form-control" id="email" aria-describedby="email" name="email">
-                                </div>
-                                <div class="form-group">
-                                    <label for="Password">Password</label>
-                                    <input value="${requestScope.password}" type="password" class="form-control" id="Password" name="password">
-                                </div>
+            <c:if test="${requestScope.error!=null}">
+                <div class="alert alert-danger" role="alert" alert-cart>
+                    ${requestScope.error}
+                </div>  
+            </c:if>
+            <section class="vh-100 gradient-custom">
+                <div class="container py-5 h-100">
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                            <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                                <div class="card-body p-5 text-center">
 
+                                    <div class="mb-md-5 mt-md-4 pb-5">
 
-                                <button type="submit" class="btn btn-primary">Đăng nhập</button>
-                            </form>
-                            <a href="reset-password">Quên mật khẩu?</a></br>
-                            <a href="register">Bạn chưa có tài khoản?</a>
+                                        <h2 class="fw-bold mb-2 text-uppercase">Đăng nhập</h2>
+                                        <form action="login" method="POST">
+                                            <div data-mdb-input-init class="form-outline form-white mb-4">
+                                                <label class="form-label" for="typeEmailX">Email</label>
+                                                <input type="email" id="typeEmailX" name="email" required class="form-control form-control-lg" />
+                                            </div>
+
+                                            <div data-mdb-input-init class="form-outline form-white mb-4">
+                                                <label class="form-label"  for="typePasswordX1">Mật khẩu</label>
+                                                <input type="password" name="password" required id="typePasswordX1" class="form-control form-control-lg" />
+                                            </div>   
+                                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit">Đăng nhập</button>
+
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
         </div>
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

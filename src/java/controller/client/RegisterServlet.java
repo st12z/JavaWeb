@@ -81,7 +81,8 @@ public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String fullName = request.getParameter("fullName");
-        String password = request.getParameter("password");
+        String password1 = request.getParameter("password1");
+        String password2 = request.getParameter("password2");
         String email = request.getParameter("email");
         String token = helper.helperClass.generateToken(10);
         String cartId = helper.helperClass.generateToken(10);
@@ -91,10 +92,20 @@ public class RegisterServlet extends HttpServlet {
 
             if (user != null) {
                 request.setAttribute("error", "Email đã tồn tại!");
-                request.getRequestDispatcher("client/register.jsp").forward(request, response);
+                request.getRequestDispatcher("/client/register.jsp").forward(request, response);
             } else {
-                d.inserUsertoDB(fullName, password, token, email, cartId);
-                response.sendRedirect("/Shop/login");
+                if (password1.length() < 8) {
+                    request.setAttribute("error", "Vui lòng nhập đúng 8 kí tự!");
+                    request.getRequestDispatcher("/client/register.jsp").forward(request, response);
+                } else if (!password1.equals(password2)) {
+                    request.setAttribute("error", "Vui lòng nhập lại mật khẩu!");
+                    request.getRequestDispatcher("/client/register.jsp").forward(request, response);
+                } else {
+                    String avatarDefault="client/images/avatar.png";
+                    d.inserUsertoDB(fullName, password1, token, email,avatarDefault, cartId);
+                    response.sendRedirect("/Shop/login");
+                }
+                
             }
         } catch (Exception ex) {
             ex.printStackTrace();

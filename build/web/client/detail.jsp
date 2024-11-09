@@ -167,7 +167,7 @@
                                         <span reviewing-star class="fa fa-star" data-value="4"></span>
                                         <span reviewing-star class="fa fa-star" data-value="5"></span>
                                         <input name="rating" hidden rating/>
-                                        <input name="productId" hidden value="${requestScope.productd.id}"/>
+                                        <input name="productId" hidden value="${requestScope.product.id}"/>
                                     </div>
                                     <div class="inner-content form-group">
                                         <p>
@@ -180,6 +180,36 @@
                             </form>
                         </div>
                     </div>
+                    <div class="col-12 mt-3 inner-feed">
+                        <c:forEach items="${requestScope.listRV}" var="feedback">
+                            <div class="person-review" person-review="feedback.id">
+                                <div class="inner-info">
+                                    <div class="inner-avatar">
+                                        <img class="review-avatar" src="${requestScope.user.avatar}" width="50px" />
+                                    </div>
+                                    <div class="inner-name">
+                                        <p>${feedback.user.fullName}</p>
+                                        <p>${feedback.user.createdAt}</p>
+                                    </div>
+                                </div>
+
+                                <div class="inner-rating" reviewed-rating="${feedback.rating}">
+                                    <span class="reviewed-star fa fa-star" data-value="1"></span>
+                                    <span class="reviewed-star fa fa-star" data-value="2"></span>
+                                    <span class="reviewed-star fa fa-star" data-value="3"></span>
+                                    <span class="reviewed-star fa fa-star" data-value="4"></span>
+                                    <span class="reviewed-star fa fa-star" data-value="5"></span>
+                                </div>
+
+                                <div class="inner-content">
+                                    <p class="reviewed-content">${feedback.content}</p>
+                                </div>
+
+
+                            </div>
+
+                        </c:forEach>
+                    </div>                
                 </div>
             </div>
         </main>
