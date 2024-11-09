@@ -243,3 +243,27 @@ table{
     /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
 }
+[review-avatar]{
+  border-radius: 50%;
+  margin-right: 10px;
+}
+.inner-name{
+  display:flex;
+  flex-direction: column;
+}
+.inner-name p{
+  margin: 0;
+}
+.inner-name >p:first-child{
+  font-weight: 700;
+  color: blue;
+}
+.person-review{
+  border-bottom:2px solid #ddd;
+  margin-bottom: 10px;
+}
+.inner-info{
+  display:flex;
+  align-items: center;
+  justify-items: center;
+}

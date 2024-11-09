@@ -78,30 +78,37 @@ public class DetailProductServlet extends HttpServlet {
         }
         String pathInfo = request.getPathInfo(); // Lấy thông tin đường dẫn
         if (pathInfo != null && pathInfo.matches("/\\w+")) { // Kiểm tra ID có dạng /id
-            String productId = pathInfo.substring(1); // Lấy ID sản phẩm (bỏ dấu "/")
-            DAO d = new DAO();
-            Product p = d.getProduct(productId);
-            List<ColorProduct> colorsProduct = d.getColorsProduct(productId);
-            Cookie[] arr = request.getCookies();
-            String token = "";
-            if (arr != null) {
-                for (Cookie o : arr) {
-                    if (o.getName().equals("token")) {
-                        token = o.getValue();
-                        break;
+            try {
+                String productId = pathInfo.substring(1); // Lấy ID sản phẩm (bỏ dấu "/")
+                DAO d = new DAO();
+                Product p = d.getProduct(productId);
+                List<ColorProduct> colorsProduct = d.getColorsProduct(productId);
+                Cookie[] arr = request.getCookies();
+                String token = "";
+                if (arr != null) {
+                    for (Cookie o : arr) {
+                        if (o.getName().equals("token")) {
+                            token = o.getValue();
+                            break;
+                        }
                     }
                 }
+                ArrayList<Review> listReview = d.getAllReview(productId);
+                Statics statics = d.getStatic(productId);
+                System.out.println("Product: " + p);
+                System.out.println("ColorsProduct: " + colorsProduct);
+                System.out.println("Statics: " + statics);
+                User user = d.getUserByToken(token);
+                request.setAttribute("statics", statics);
+                request.setAttribute("product", p);
+                request.setAttribute("User", user);
+                request.setAttribute("listRV", listReview);
+                request.setAttribute("colorsProduct", colorsProduct);
+
+                request.getRequestDispatcher("/client/detail.jsp").forward(request, response);
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
-            ArrayList<Review> listReview = d.getAllReview(productId);
-            Statics statics=d.getStatic(productId);
-            User user = d.getUserByToken(token);
-            request.setAttribute("statics", statics);
-            request.setAttribute("product", p);
-            request.setAttribute("User", user);
-            request.setAttribute("listRV", listReview);
-            request.setAttribute("colorsProduct", colorsProduct);
-  
-            request.getRequestDispatcher("/client/detail.jsp").forward(request, response);
         } else {
             // Nếu không có ID hợp lệ, trả về lỗi 404
             response.sendError(HttpServletResponse.SC_NOT_FOUND);

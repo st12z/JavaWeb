@@ -185,20 +185,20 @@
                             <div class="person-review" person-review="feedback.id">
                                 <div class="inner-info">
                                     <div class="inner-avatar">
-                                        <img class="review-avatar" src="${requestScope.user.avatar}" width="50px" />
+                                        <img review-avatar src="/Shop/${requestScope.User.avatar}" width="50px" />
                                     </div>
                                     <div class="inner-name">
                                         <p>${feedback.user.fullName}</p>
-                                        <p>${feedback.user.createdAt}</p>
+                                        <p>${feedback.createdAt}</p>
                                     </div>
                                 </div>
 
                                 <div class="inner-rating" reviewed-rating="${feedback.rating}">
-                                    <span class="reviewed-star fa fa-star" data-value="1"></span>
-                                    <span class="reviewed-star fa fa-star" data-value="2"></span>
-                                    <span class="reviewed-star fa fa-star" data-value="3"></span>
-                                    <span class="reviewed-star fa fa-star" data-value="4"></span>
-                                    <span class="reviewed-star fa fa-star" data-value="5"></span>
+                                    <span class="fa fa-star" reviewed-star data-value="1"></span>
+                                    <span class="fa fa-star" reviewed-star data-value="2"></span>
+                                    <span class="fa fa-star" reviewed-star data-value="3"></span>
+                                    <span class="fa fa-star" reviewed-star data-value="4"></span>
+                                    <span class="fa fa-star" reviewed-star data-value="5"></span>
                                 </div>
 
                                 <div class="inner-content">

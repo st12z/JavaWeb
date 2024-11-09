@@ -594,7 +594,7 @@ public class DAO extends DBContext {
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
                 list.add(new Review(getProduct(rs.getString("productId")), 
-                        getUserById(rs.getInt("id")), rs.getNString("content"), rs.getInt("rating")));
+                        getUserById(rs.getInt("id")), rs.getNString("content"), rs.getInt("rating"),rs.getDate("createdAt")));
             }
             return list;
         } catch (Exception ex) {
@@ -604,7 +604,11 @@ public class DAO extends DBContext {
     }
     public static void main(String[] args) {
         DAO d = new DAO();
-        ArrayList<Review> list = d.getAllReview("ip13");
+        Product p =d.getProduct("ip11");
+        System.out.println(p);
+        Statics st =d.getStatic("ip11");
+        ArrayList<Review> list=d.getAllReview("ip11");
         System.out.println(list);
+        System.out.println(st);
     }
 }

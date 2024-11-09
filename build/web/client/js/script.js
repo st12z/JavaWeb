@@ -134,3 +134,22 @@ if (reviewStars) {
         });
     });
 }
+const reviewedStar = () => {
+  const reviewedRatings = document.querySelectorAll("[reviewed-rating]");
+  if (reviewedRatings) {
+    reviewedRatings.forEach((reviewedRating) => {
+      const rating = reviewedRating.getAttribute("reviewed-rating");
+      const reviewedStars = reviewedRating.querySelectorAll("[reviewed-star]");
+      console.log(reviewedStars);
+      reviewedStars.forEach((reviewedStar) => {
+        const data = reviewedStar.getAttribute("data-value");
+        if (data <= rating) {
+          reviewedStar.classList.add("checked");
+        } else {
+          reviewedStar.classList.remove("checked");
+        }
+      });
+    });
+  }
+};
+reviewedStar();

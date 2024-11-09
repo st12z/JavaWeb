@@ -19,6 +19,11 @@
         <%@ include file='banner.jsp' %>
         <%@include file="contact.jsp" %>
         <div class="container">
+            <c:if test="${requestScope.error!=null}">
+                <div class="alert alert-danger" role="alert" alert-cart>
+                    ${requestScope.error}
+                </div>  
+            </c:if>
             <div class="card">
                 <div class="card-header">
                     Đổi mật khẩu

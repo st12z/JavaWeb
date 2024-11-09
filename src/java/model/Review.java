@@ -4,21 +4,26 @@
  */
 package model;
 
+import java.sql.Date;
+
 /**
  *
  * @author T
  */
 public class Review {
+
     private Product product;
     private User user;
     private String content;
     private int rating;
+    private Date createdAt;
 
-    public Review(Product product, User user, String content, int rating) {
+    public Review(Product product, User user, String content, int rating, Date createdAt) {
         this.product = product;
         this.user = user;
         this.content = content;
         this.rating = rating;
+        this.createdAt = createdAt;
     }
 
     public Product getProduct() {
@@ -27,6 +32,10 @@ public class Review {
 
     public User getUser() {
         return user;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
     }
 
     public String getContent() {
@@ -57,5 +66,5 @@ public class Review {
     public String toString() {
         return "Review{" + "product=" + product + ", user=" + user + ", content=" + content + ", rating=" + rating + '}';
     }
-    
+
 }

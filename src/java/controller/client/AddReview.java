@@ -13,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.Date;
 import model.Review;
 import model.Statics;
 import model.User;
@@ -93,9 +94,10 @@ public class AddReview extends HttpServlet {
         User user = d.getUserByToken(token);
         try {
             int rating = Integer.parseInt(rating_raw);
-            Review r = new Review(d.getProduct(productId), user, description, rating);
+            java.util.Date utilDate = new Date();
+            Review r = new Review(d.getProduct(productId), user, description, rating,new java.sql.Date(utilDate.getTime()));
             d.insertReview(r);
-            String url_redirect="/Shop/home";
+            String url_redirect="/Shop/detail/"+productId;
             response.sendRedirect(url_redirect);
         } catch (Exception ex) {
             System.out.println(ex);

@@ -14,6 +14,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -68,6 +69,17 @@ public class DetailUserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession session = request.getSession();
+
+        // Kiểm tra và lấy lỗi từ session nếu có
+        String error = (String) session.getAttribute("error");
+        if (error != null) {
+            // Gửi lỗi tới trang JSP
+            request.setAttribute("error", error);
+
+            // Xóa lỗi khỏi session sau khi hiển thị
+            session.removeAttribute("error");
+        }
         Cookie arr[] = request.getCookies();
         String token = "";
         if (arr != null) {
@@ -117,26 +129,26 @@ public class DetailUserServlet extends HttpServlet {
         // Lấy thông tin user từ token và cập nhật vào database
         DAO dao = new DAO();
         User user = dao.getUserByToken(token);
-        
-        try{
-            FileOutputStream fos=new FileOutputStream(uploadPath);
-            InputStream is=avatarPart.getInputStream();
-            byte[] data= new byte[is.available()];
+
+        try {
+            FileOutputStream fos = new FileOutputStream(uploadPath);
+            InputStream is = avatarPart.getInputStream();
+            byte[] data = new byte[is.available()];
             is.read(data);
             fos.write(data);
             fos.close();
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e);
         }
-        if(avatarFileName.equals("")){
-            dao.updateUser(user, fullName, email,user.getAvatar());
+        if (avatarFileName.equals("")) {
+            dao.updateUser(user, fullName, email, user.getAvatar());
+        } else {
+            dao.updateUser(user, fullName, email, "client/images/" + avatarFileName);
         }
-        else{
-            dao.updateUser(user, fullName, email,"client/images/"+avatarFileName);
-        }
-        
 
         // Chuyển hướng về trang chi tiết user
+        HttpSession session = request.getSession();
+        session.setAttribute("error", "Cập thành thành công!");
         response.sendRedirect("/Shop/detail-user");
     }
 

@@ -19,6 +19,11 @@
         <%@ include file="header.jsp" %>
         <%@ include file='banner.jsp' %>
         <div class="container-xl px-4 mt-4">
+            <c:if test="${requestScope.error!=null}">
+                <div class="alert alert-danger" role="alert" alert-cart>
+                    ${requestScope.error}
+                </div>  
+            </c:if>
             <hr class="mt-0 mb-4">
             <form method="POST" action="detail-user" enctype="multipart/form-data" class="form-group">
                 <div class="row">

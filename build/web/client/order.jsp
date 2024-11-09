@@ -32,7 +32,7 @@
         <div class="container">
             <c:if test="${not empty requestScope.orders}">
                 <c:forEach items="${requestScope.orders}" var="o" varStatus="status">
-                    <h3>Đơn hàng số ${status.index+1}: </h3>
+                    <h3>Đơn hàng  #${o.orderId}: </h3>
                     <div class="container mt-3 ">
                         <div class="row ">
                             <div class="col-12">
