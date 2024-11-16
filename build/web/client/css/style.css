@@ -91,8 +91,8 @@ table{
 .alert{
     width:200px;
     position:absolute;
-    right:100px;
-    top:200px;
+    right:80px;
+    top:150px;
 }
 [alert-cart].alert-hidden{
     animation-name:alert-hidden;
@@ -267,3 +267,118 @@ table{
   align-items: center;
   justify-items: center;
 }
+.inner-edit{
+  display:none;
+}
+.inner-edit.active{
+  display:block;
+}
+.inner-quantity{
+    display:flex;
+}
+.nav-tabs {
+    border-bottom: 2px solid #ddd;
+}
+
+.nav-tabs .nav-item .nav-link {
+    color: #555;
+    padding: 10px 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.nav-tabs .nav-item .nav-link.active {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.nav-tabs .nav-item .nav-link:hover {
+    background-color: #0056b3;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Select sắp xếp */
+select[name="select-sort"] {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+select[name="select-sort"]:hover {
+    border-color: #007bff;
+}
+
+/* Radio chọn giá */
+.price-checkbox {
+    margin-top: 20px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.price-checkbox label {
+    margin-left: 8px;
+    color: #333;
+    cursor: pointer;
+}
+
+.price-checkbox input[type="radio"] {
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+/* Pagination */
+.pagination {
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination .page-item .page-link {
+    color: #007bff;
+    padding: 8px 12px;
+    margin: 0 2px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer;
+}
+
+.pagination .page-item .page-link:hover {
+    background-color: #0056b3;
+    color: #fff;
+    text-decoration: none;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff;
+}
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+.inner-image{
+    aspect-ratio:1/1;
+}
+.inner-image img{
+    width:200px;
+    height: 200px;
+    object-fit: cover;
+}
+

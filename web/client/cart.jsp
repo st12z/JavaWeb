@@ -32,66 +32,85 @@
         <%@ include file="header.jsp" %>
         <%@ include file='banner.jsp' %>
         <%@include file="contact.jsp" %>
-        <c:if test="${not empty requestScope.items}">
-            <div class="container my-3">
-                <c:if test="${requestScope.error!=null}">
-                    <div class="alert alert-danger" role="alert" alert-cart>
-                        ${requestScope.error}
-                    </div>  
-                </c:if>
-                <h1 class="mb-3">Thông tin giỏ hàng</h1>
-                <div class="row">
-                    <div class="col-12">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Tên sản phẩm</th>
-                                    <th>Ảnh sản phẩm</th>
-                                    <th>Giá</th>
-                                    <th>Màu</th>
-                                    <th>Số lượng</th>
-                                    <th>Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach items="${requestScope.items}" var="i" varStatus="status">
+        <div class="container px-3 my-5 clearfix">
+            <c:if test="${not empty requestScope.items}">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Shopping Cart</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered m-0" table-cart>
+                                <thead>
                                     <tr>
-                                        <td>${status.index+1}</td>
-                                        <td>${i.product.name}</td>
-                                        <td><img src="${i.image}" alt="image" style="width:80px"/></td>
-                                        <td>${i.product.getPriceVND()} VNĐ</td>
-                                        <td><span class="badge badge-info">${i.color}</span></td>
-                                        <td>
-                                            <a href="process?id=${i.product.id}&action=desc&colorId=${i.colorId}">
-                                                <button>-</button>
-                                            </a>
-                                            <input style="width:50px" type="number" value="${i.quantity}"/>
-                                            <a href="process?id=${i.product.id}&action=incr&colorId=${i.colorId}">
-                                                <button>+</button>
-                                            </a>
-                                        </td>
-                                        <td>
-                                            <a href="process?id=${i.product.id}&action=delete&colorId=${i.colorId}">
-                                                <button class="btn btn-info"><i class="fa-solid fa-trash-can"></i></button>
-                                            </a>
-                                        </td>
+                                        <!-- Set columns width -->
+                                        <th class="text-center py-3 px-4" style="min-width: 400px;">Tên sản phẩm &amp; Ảnh</th>
+                                        <th class="text-right py-3 px-4" style="width: 150px;">Giá</th>
+                                        <th class="text-center py-3 px-4" style="width: 150px;">Màu</th>
+                                        <th class="text-right py-3 px-4" style="width: 150px;">Số lượng</th>
+                                        <th class="text-right py-3 px-4" style="width: 100px;">Hành động</th>
                                     </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    <c:forEach items="${requestScope.items}" var="i" varStatus="status">
+                                        <tr>
+                                            <td class="p-4">
+                                                <div class="media align-items-center">
+                                                    <img src="${i.image}" alt="image" style="width:80px"/>
+                                                    <div class="media-body">
+                                                        <p><b>${i.product.name}</b></p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="text-right font-weight-semibold align-middle p-4">${i.product.getPriceVND()} VNĐ</td>
+                                            <td><span class="badge badge-info">${i.color}</span></td>
+                                            <td class="align-middle p-4">
+                                                <div class="inner-quantity">
+                                                    <a href="process?id=${i.product.id}&action=desc&colorId=${i.colorId}">
+                                                        <button>-</button>
+                                                    </a>
+                                                    <input style="width:50px" type="number" value="${i.quantity}"/>
+                                                    <a href="process?id=${i.product.id}&action=incr&colorId=${i.colorId}">
+                                                        <button>+</button>
+                                                    </a>
+                                                </div>
+
+                                            </td>
+                                            <td class="text-center align-middle px-0"><a href="process?id=${i.product.id}&action=delete&colorId=${i.colorId}">
+                                                    <button class="btn btn-info"><i class="fa-solid fa-trash-can"></i></button>
+                                                </a></td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- / Shopping cart table -->
+
+                        <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
+                            <div class="mt-4">
+
+                            </div>
+                            <div class="d-flex">
+                                <div class="text-right mt-4">
+                                    <label class="text-muted font-weight-normal m-0">Total price</label>
+                                    <div class="text-large"><strong total-payment>Tổng tiền thanh toán: ${requestScope.totalMoney} VNĐ</strong></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="float-right">
+                            <a href="payment">
+                                <button class="btn btn-primary mt-3">
+                                    Thanh toán
+                                </button>
+                            </a>
+                        </div>
+
                     </div>
                 </div>
 
-                <a href="payment">
-                    <button class="btn btn-primary mt-3">
-                        Thanh toán
-                    </button>
-                </a>
-                <h2 style="color:red">Tổng tiền thanh toán là: ${requestScope.totalMoney} VNĐ</h2>
-            </div>
-        </c:if>
-        <div class="container my-3">
+            </c:if>
             <c:if test="${empty requestScope.items}">
                 <h1>Giỏ hàng trống</h1>
             </c:if>

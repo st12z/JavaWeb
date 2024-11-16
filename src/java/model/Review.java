@@ -17,8 +17,9 @@ public class Review {
     private String content;
     private int rating;
     private Date createdAt;
-
-    public Review(Product product, User user, String content, int rating, Date createdAt) {
+    private int id;
+    public Review(int id,Product product, User user, String content, int rating, Date createdAt) {
+        this.id=id;
         this.product = product;
         this.user = user;
         this.content = content;
@@ -50,6 +51,18 @@ public class Review {
         this.product = product;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public void setUser(User user) {
         this.user = user;
     }

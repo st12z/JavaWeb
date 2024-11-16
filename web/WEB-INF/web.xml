@@ -12,4 +12,8 @@
         <servlet-name>AddToCartServlet</servlet-name>
         <url-pattern>/add-cart/*</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeleteReviewServlet</servlet-name>
+        <url-pattern>/delete-review/*</url-pattern>
+    </servlet-mapping>
 </web-app>

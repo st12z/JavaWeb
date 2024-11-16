@@ -29,7 +29,7 @@
         <%@ include file="header.jsp" %>
         <%@ include file='banner.jsp' %>
         <%@include file="contact.jsp" %>
-        <div class="container">
+        <div class="container px-3 my-5 clearfix">
             <c:if test="${not empty requestScope.orders}">
                 <c:forEach items="${requestScope.orders}" var="o" varStatus="status">
                     <h3>Đơn hàng  #${o.orderId}: </h3>

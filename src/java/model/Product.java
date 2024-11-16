@@ -26,6 +26,7 @@ public class Product {
     private int deleted;
     private Category category;
     private String color;
+    private int rating;
     @Override
     public String toString() {
         return "Product{" + "id=" + id + ", name=" + name + ", quantity=" + quantity + ", price=" + price + ", releaseDate=" + releaseDate + ", image=" + image + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", status=" + status + ", discountPercentage=" + discountPercentage + ", promotion=" + promotion + ", warranty=" + warranty + ", deleted=" + deleted + ", category=" + category + '}';
@@ -39,7 +40,7 @@ public class Product {
         this.color = color;
     }
     
-    public Product(String id, String name, int quantity, double price, Date releaseDate, String image, Date createdAt, Date updatedAt, String status, double discountPercentage, String promotion, String warranty, int deleted, Category category) {
+    public Product(String id, String name, int quantity, double price, Date releaseDate, String image, Date createdAt, Date updatedAt, String status, double discountPercentage, String promotion, String warranty, int deleted, Category category,int rating) {
         this.id = id;
         this.name = name;
         this.quantity = quantity;
@@ -54,12 +55,17 @@ public class Product {
         this.warranty = warranty;
         this.deleted = deleted;
         this.category = category;
+        this.rating=rating;
     }
 
     public String getId() {
         return id;
     }
 
+    public int getRating() {
+        return rating;
+    }
+    
     public String getName() {
         return name;
     }

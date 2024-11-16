@@ -124,7 +124,6 @@ const updateStar = (value, stars) => {
 };
 const inputRating = document.querySelector("input[rating]");
 const reviewStars = document.querySelectorAll("[reviewing-star]");
-console.log(reviewStars);
 if (reviewStars) {
     reviewStars.forEach((star) => {
         star.addEventListener("click", () => {
@@ -135,21 +134,67 @@ if (reviewStars) {
     });
 }
 const reviewedStar = () => {
-  const reviewedRatings = document.querySelectorAll("[reviewed-rating]");
-  if (reviewedRatings) {
-    reviewedRatings.forEach((reviewedRating) => {
-      const rating = reviewedRating.getAttribute("reviewed-rating");
-      const reviewedStars = reviewedRating.querySelectorAll("[reviewed-star]");
-      console.log(reviewedStars);
-      reviewedStars.forEach((reviewedStar) => {
-        const data = reviewedStar.getAttribute("data-value");
-        if (data <= rating) {
-          reviewedStar.classList.add("checked");
-        } else {
-          reviewedStar.classList.remove("checked");
-        }
-      });
-    });
-  }
+    const reviewedRatings = document.querySelectorAll("[reviewed-rating]");
+    if (reviewedRatings) {
+        reviewedRatings.forEach((reviewedRating) => {
+            const rating = reviewedRating.getAttribute("reviewed-rating");
+            const reviewedStars = reviewedRating.querySelectorAll("[reviewed-star]");
+            reviewedStars.forEach((reviewedStar) => {
+                const data = reviewedStar.getAttribute("data-value");
+                if (data <= rating) {
+                    reviewedStar.classList.add("checked");
+                } else {
+                    reviewedStar.classList.remove("checked");
+                }
+            });
+        });
+    }
 };
 reviewedStar();
+const ratingStar = document.querySelector("#rating");
+if (ratingStar) {
+    const feedStars = document.querySelectorAll(".feed-star");
+    const rating = ratingStar.getAttribute("rating");
+    updateStar(parseInt(rating), feedStars);
+}
+
+const buttonEdits = document.querySelectorAll("[review-edit]");
+if (buttonEdits) {
+    buttonEdits.forEach(button => {
+        button.addEventListener("click", () => {
+            const reviewId = button.getAttribute("review-edit");
+            const personReview = document.querySelector(`[person-review="${reviewId}"]`);
+            const rating = personReview.querySelector("[reviewed-rating]").getAttribute("reviewed-rating");
+            console.log(rating);
+            const innerEdit = document.querySelector(`[inner-edit="${reviewId}"]`);
+            innerEdit.classList.toggle("active");
+            const editStars = innerEdit.querySelectorAll("[edit-star]");
+            editStars.forEach((editStar) => {
+                const data = editStar.getAttribute("data-value");
+                if (data <= rating) {
+                    editStar.classList.add("checked");
+                }
+            });
+            const inputRating = innerEdit.querySelector("[edit-rating]");
+
+            const updateEditStar = (value) => {
+                editStars.forEach((editStar) => {
+                    const data = editStar.getAttribute("data-value");
+                    if (data <= value) {
+                        editStar.classList.add("checked");
+                        inputRating.value = data;
+                    } else {
+                        editStar.classList.remove("checked");
+                    }
+                });
+            };
+            editStars.forEach((editStar) => {
+                editStar.addEventListener("click", () => {
+                    const data = editStar.getAttribute("data-value");
+                    updateEditStar(data);
+                    inputRating.value = data;
+                });
+            });
+        });
+    })
+}

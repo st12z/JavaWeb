@@ -52,7 +52,15 @@
                     </div>  
                 </c:if>
                 <h2 class="mt-3 mb-3">Thông tin sản phẩm</h2>
-                <div class="row">
+                <div id="rating" rating="${requestScope.product.rating}">
+                    <span class="review-star">Đánh giá sản phẩm: ${requestScope.product.rating}.0</span>
+                    <span class="feed-star fa fa-star" data-value="1"></span>
+                    <span class="feed-star fa fa-star" data-value="2"></span>
+                    <span class="feed-star fa fa-star" data-value="3"></span>
+                    <span class="feed-star fa fa-star" data-value="4"></span>
+                    <span class="feed-star fa fa-star" data-value="5"></span>
+                </div>
+                <div class="row mt-3">
                     <div class="col-xl-5 col-lg-5 col-sm-5 col-12 ">
                         <div class="inner-image">
                             <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
@@ -182,7 +190,7 @@
                     </div>
                     <div class="col-12 mt-3 inner-feed">
                         <c:forEach items="${requestScope.listRV}" var="feedback">
-                            <div class="person-review" person-review="feedback.id">
+                            <div class="person-review" person-review="${feedback.id}">
                                 <div class="inner-info">
                                     <div class="inner-avatar">
                                         <img review-avatar src="/Shop/${feedback.user.avatar}" width="50px" />
@@ -204,10 +212,49 @@
                                 <div class="inner-content">
                                     <p class="reviewed-content">${feedback.content}</p>
                                 </div>
+                                <c:if test="${requestScope.User != null && feedback.user.id==requestScope.User.id}">
 
+                                    <div class="inner-action" feedback="${feedback.id}">
+
+                                        <i class="fa-solid fa-pen-to-square mr-2" review-edit="${feedback.id}"></i>
+                                        <a href="/Shop/delete-review/${feedback.id}">
+                                            <i class="fa-solid fa-trash" review-delete="${feedback.id}"></i>
+                                        </a>
+
+                                    </div>
+                                </c:if>
 
                             </div>
+                            <div class="inner-edit"  inner-edit="${feedback.id}">
+                                <form class="form-edit-review" method="POST" action="/Shop/update-review/${feedback.id}">
+                                    <div class="inner-review">
+                                        <div class="inner-rating form-group">
+                                            <p><b>1. Đánh giá của bạn về khóa học</b></p>
+                                            <span edit-star class="fa fa-star" data-value="1"></span>
+                                            <span edit-star class="fa fa-star" data-value="2"></span>
+                                            <span edit-star class="fa fa-star" data-value="3"></span>
+                                            <span edit-star class="fa fa-star" data-value="4"></span>
+                                            <span edit-star class="fa fa-star" data-value="5"></span>
+                                            <input 
+                                                name="rating" 
+                                                type="text"
+                                                hidden
+                                                edit-rating
+                                                />
+                                           <input name="productId" hidden value="${requestScope.product.id}"/>
+                                        </div>
 
+                                        <div class="inner-content form-group">
+                                            <p><b>2. Cảm nhận của bạn về khóa học</b></p>
+                                            <textarea class="form-control" name="description">
+                                                ${feedback.content}
+                                            </textarea>
+                                        </div>
+
+                                        <button class="btn btn-primary mb-3" type="submit">Cập nhật</button>
+                                    </div>
+                                </form>
+                            </div>        
                         </c:forEach>
                     </div>                
                 </div>

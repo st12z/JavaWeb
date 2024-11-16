@@ -12,12 +12,12 @@ import java.sql.ResultSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.sql.Date;
 import model.ColorProduct;
 import model.User;
 import model.Item;
 import model.OrderItem;
 import model.OrderDetail;
-
 import model.Product;
 import model.Review;
 import model.Statics;
@@ -53,7 +53,7 @@ public class DAO extends DBContext {
             while (rs.next()) {
                 Product p = new Product(rs.getString("id"), rs.getString("name"), rs.getInt("quantity"), rs.getDouble("price"),
                         rs.getDate("releaseDate"), rs.getString("image"), rs.getDate("createdAt"), rs.getDate("updatedAt"), rs.getString("status"),
-                        rs.getDouble("discountPercentage"), rs.getString("promotion"), rs.getString("warranty"), rs.getInt("deleted"), getCategoryByID(rs.getInt("categoryId")));
+                        rs.getDouble("discountPercentage"), rs.getString("promotion"), rs.getString("warranty"), rs.getInt("deleted"), getCategoryByID(rs.getInt("categoryId")), rs.getInt("rating"));
                 list.add(p);
             }
         } catch (Exception ex) {
@@ -115,7 +115,7 @@ public class DAO extends DBContext {
             while (rs.next()) {
                 Product p = new Product(rs.getString("id"), rs.getString("name"), rs.getInt("quantity"), rs.getDouble("price"),
                         rs.getDate("releaseDate"), rs.getString("image"), rs.getDate("createdAt"), rs.getDate("updatedAt"), rs.getString("status"),
-                        rs.getDouble("discountPercentage"), rs.getString("promotion"), rs.getString("warranty"), rs.getInt("deleted"), getCategoryByID(rs.getInt("categoryId")));
+                        rs.getDouble("discountPercentage"), rs.getString("promotion"), rs.getString("warranty"), rs.getInt("deleted"), getCategoryByID(rs.getInt("categoryId")), rs.getInt("rating"));
                 list.add(p);
 
             }
@@ -166,7 +166,7 @@ public class DAO extends DBContext {
             if (rs.next()) {
                 Product p = new Product(rs.getString("id"), rs.getString("name"), rs.getInt("quantity"), rs.getDouble("price"),
                         rs.getDate("releaseDate"), rs.getString("image"), rs.getDate("createdAt"), rs.getDate("updatedAt"), rs.getString("status"),
-                        rs.getDouble("discountPercentage"), rs.getString("promotion"), rs.getString("warranty"), rs.getInt("deleted"), getCategoryByID(rs.getInt("categoryId")));
+                        rs.getDouble("discountPercentage"), rs.getString("promotion"), rs.getString("warranty"), rs.getInt("deleted"), getCategoryByID(rs.getInt("categoryId")), rs.getInt("rating"));
                 return p;
             }
         } catch (Exception ex) {
@@ -225,6 +225,7 @@ public class DAO extends DBContext {
         }
         return null;
     }
+
     public User getUserById(int id) {
         String sql = "SELECT [id]\n"
                 + "      ,[fullName]\n"
@@ -252,6 +253,7 @@ public class DAO extends DBContext {
         }
         return null;
     }
+
     public User getUserByEmail(String email) {
         String sql = "SELECT [id]\n"
                 + "      ,[fullName]\n"
@@ -345,7 +347,7 @@ public class DAO extends DBContext {
         return 0;
     }
 
-    public void inserUsertoDB(String fullName, String password, String token, String email,String avatar, String cartId) {
+    public void inserUsertoDB(String fullName, String password, String token, String email, String avatar, String cartId) {
         String sql = "INSERT INTO [dbo].[Users]\n"
                 + "           ([fullName]\n"
                 + "           ,[password]\n"
@@ -585,7 +587,8 @@ public class DAO extends DBContext {
 
         }
     }
-    public ArrayList<Review> getAllReview(String productId){
+
+    public ArrayList<Review> getAllReview(String productId) {
         String sql = "select * from Review where productId=? order by createdAt desc";
         ArrayList<Review> list = new ArrayList();
         try {
@@ -593,8 +596,8 @@ public class DAO extends DBContext {
             st.setString(1, productId);
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                list.add(new Review(getProduct(rs.getString("productId")), 
-                        getUserById(rs.getInt("userId")), rs.getNString("content"), rs.getInt("rating"),rs.getDate("createdAt")));
+                list.add(new Review(rs.getInt("id"), getProduct(rs.getString("productId")),
+                        getUserById(rs.getInt("userId")), rs.getNString("content"), rs.getInt("rating"), rs.getDate("createdAt")));
             }
             return list;
         } catch (Exception ex) {
@@ -602,13 +605,71 @@ public class DAO extends DBContext {
         }
         return null;
     }
+
+    public String getProductId(int reviewId) {
+        String sql = "select * from Review where id=? ";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, reviewId);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                return rs.getString("productId");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public void deleteReview(int reviewId) {
+        String sql = "DELETE FROM [dbo].[Review]\n"
+                + "      WHERE id=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, reviewId);
+            st.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void updateRatingOfProduct(String productId, int rating) {
+        String sql = "UPDATE [dbo].[Product]\n"
+                + "   SET [rating] =?\n"
+                + " WHERE id=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, rating);
+            st.setString(2, productId);
+            st.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void updateReview(int reviewId, int rating, String content, Date date) {
+        String sql = "UPDATE [dbo].[Review]\n"
+                + "   SET \n"
+                + "      [content] = ?\n"
+                + "      ,[rating] = ?\n"
+                + "      ,[createdAt] = ?\n"
+                + " WHERE id=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setNString(1, content);
+            st.setInt(2, rating);
+            st.setDate(3, date);
+            st.setInt(4, reviewId);
+            st.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         DAO d = new DAO();
-        Product p =d.getProduct("ip11");
-        System.out.println(p);
-        Statics st =d.getStatic("ip11");
-        ArrayList<Review> list=d.getAllReview("ip11");
-        System.out.println(list);
-        System.out.println(st);
+        java.util.Date utilDate = new java.util.Date();
+        d.updateReview(Integer.parseInt("8"),6, "a11", new java.sql.Date(utilDate.getTime()));
     }
 }

@@ -24,7 +24,7 @@
         <!--header-->
         <!--main-->
         <div class="container mt-3">
-            
+
             <ul class="nav nav-tabs">
                 <li class="nav-item ">
                     <a class="nav-link ${cid==null?"active":""}"  dataCategory-id="0">ALL</a>
@@ -63,6 +63,27 @@
                 </div>
             </div>
             <div class="container mt-3">
+
+                <div class="row">
+
+                    <c:forEach items="${requestScope.products}" var="c">
+                        <div class="col-xl-4 col-lg-4 col-sm-4 col-12 mb-3">
+                            <div class="card" style="width:18rem;">
+                                <a href="detail/${c.id}">
+                                    <div class="inner-image">
+                                        <img src="${c.image}" alt="logo" class="card-img-top">
+                                    </div>
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">${c.name}</h5>
+                                    <p>${c.getPriceVND()} VNĐ</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+
+                </div>
                 <nav aria-label="...">
                     <ul class="pagination">
                         <c:if test="${requestScope.currentPage>1}">
@@ -86,24 +107,6 @@
                         </c:if>    
                     </ul>
                 </nav>
-                <div class="row">
-
-                    <c:forEach items="${requestScope.products}" var="c">
-                        <div class="col-xl-4 col-lg-4 col-sm-4 col-12 mb-3">
-                            <div class="card" style="width:18rem;">
-                                <a href="detail/${c.id}">
-                                    <img src="${c.image}" alt="logo" class="card-img-top">
-                                </a>
-                                <div class="card-body">
-                                    <h5 class="card-title">${c.name}</h5>
-                                    <p>${c.getPriceVND()} VNĐ</p>
-
-                                </div>
-                            </div>
-                        </div>
-                    </c:forEach>
-
-                </div>
             </div>
 
         </main>

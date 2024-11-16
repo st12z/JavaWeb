@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Date;
 import model.Review;
 import model.Statics;
@@ -111,12 +112,20 @@ public class AddReview extends HttpServlet {
 
         } else {
             User user = d.getUserByToken(token);
-
+            
             try {
                 int rating = Integer.parseInt(rating_raw);
                 java.util.Date utilDate = new Date();
-                Review r = new Review(d.getProduct(productId), user, description, rating, new java.sql.Date(utilDate.getTime()));
+                ArrayList<Review> list = d.getAllReview(productId);
+                
+                Review r = new Review(list.size()+1,d.getProduct(productId), user, description, rating, new java.sql.Date(utilDate.getTime()));
                 d.insertReview(r);
+                int sumRating=0;
+                for(Review review:list){
+                    sumRating+=review.getRating();
+                }
+                int averageRating=(sumRating+rating)/(list.size()+1);
+                d.updateRatingOfProduct(productId, averageRating);
                 String url_redirect = "/Shop/detail/" + productId;
                 response.sendRedirect(url_redirect);
             } catch (Exception ex) {
