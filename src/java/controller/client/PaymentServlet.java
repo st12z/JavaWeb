@@ -5,6 +5,7 @@
 package controller.client;
 
 import dal.DAO;
+import helper.helperClass;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.Date;
 import java.util.List;
 import model.Cart;
 import model.Item;
@@ -94,9 +96,21 @@ public class PaymentServlet extends HttpServlet {
                 }
             }
         }
+        //Check login
+        String token = "";
+        if (arr != null) {
+            for (Cookie o : arr) {
+                if (o.getName().equals("token")) {
+                    token = o.getValue();
+                    break;
+                }
+            }
+        }
+        User user = d.getUserByToken(token);
         Cart cart = new Cart(txt);
         List<Item> items = cart.getItems();
         request.setAttribute("items", items);
+        request.setAttribute("User", user);
         request.setAttribute("totalMoney", cart.getTotalMoneyVND());
         request.getRequestDispatcher("client/payment.jsp").forward(request, response);
     }
@@ -114,7 +128,7 @@ public class PaymentServlet extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession();
 
-        String fullname = request.getParameter("fullname");
+        String fullname = request.getParameter("fullName");
         String address = request.getParameter("address");
         String phone = request.getParameter("phone");
         Cookie[] arr = request.getCookies();
@@ -164,12 +178,13 @@ public class PaymentServlet extends HttpServlet {
         User user = d.getUserByToken(token);
 
         request.setAttribute("User", user);
-
+        java.util.Date utilDate = new Date();
         Cart cart = new Cart(txt);
         List<Item> items = cart.getItems();
         int userId = user.getId();
         double totalPayment = cart.getTotalMoney();
-        OrderDetail o = new OrderDetail(userId, fullname, address, phone, totalPayment);
+        String code = helperClass.generateToken(10);
+        OrderDetail o = new OrderDetail(userId, fullname, address, phone, totalPayment,new java.sql.Date(utilDate.getTime()),code);
         d.insertOrdertoDB(o);
         d.insertItemstoDB(items);
         response.sendRedirect("home");

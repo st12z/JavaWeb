@@ -412,13 +412,17 @@ public class DAO extends DBContext {
                 + "           ,[fullName]\n"
                 + "           ,[address]\n"
                 + "           ,[phone]\n"
-                + "           ,[totalPayment])\n" // Đã chỉnh sửa
+                + "           ,[totalPayment]\n"
+                + "           ,[createAt]\n"
+                + "           ,[code])\n"
                 + "     VALUES\n"
                 + "           (?\n"
                 + "           ,?\n"
                 + "           ,?\n"
                 + "           ,?\n"
-                + "           ,?);"; // Đã chỉnh sửa
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?)"; // Đã chỉnh sửa
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, o.getUserId());
@@ -426,6 +430,8 @@ public class DAO extends DBContext {
             st.setString(3, o.getAddress());
             st.setString(4, o.getPhone());
             st.setDouble(5, o.getTotalPayment());
+            st.setDate(6, o.getCreatedAt());
+            st.setString(7, o.getCode());
             st.executeUpdate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -472,6 +478,7 @@ public class DAO extends DBContext {
                 + "      ,[totalPayment]\n"
                 + "      ,[createAt]\n"
                 + "      ,[updatedAt]\n"
+                + "      ,[code]\n"
                 + "  FROM [dbo].[OrderDetail]\n"
                 + "  where userId=?";
         try {
@@ -502,7 +509,8 @@ public class DAO extends DBContext {
                             rs2.getInt("quantity"), rs2.getInt("colorId"), colorName, image);
                     items.add(item);
                 }
-                OrderDetail o = new OrderDetail(userId, rs1.getString("fullName"), rs1.getString("address"), rs1.getString("phone"), rs1.getDouble("totalPayment"));
+                OrderDetail o = new OrderDetail(userId, rs1.getString("fullName"), rs1.getString("address"), rs1.getString("phone"),
+                        rs1.getDouble("totalPayment"),rs1.getDate("createAt"),rs1.getString("code"));
                 o.setOrderId(orderId);
                 o.setList(items);
                 orders.add(o);
@@ -669,7 +677,5 @@ public class DAO extends DBContext {
 
     public static void main(String[] args) {
         DAO d = new DAO();
-        java.util.Date utilDate = new java.util.Date();
-        d.updateReview(Integer.parseInt("8"),6, "a11", new java.sql.Date(utilDate.getTime()));
     }
 }

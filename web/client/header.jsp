@@ -29,14 +29,14 @@
             <div class="col-xl-1 col-lg-1 col-sm-1 col-12">
                 <div class="cart">
                     <a href="/Shop/cart">
-                        <i class="fa-solid fa-cart-shopping"></i>
+                        <img src="/Shop/client/images/icon-cart.png"/ width="30px">
                     </a>
                 </div>
             </div>
             <div class="col-xl-1 col-lg-1 col-sm-1 col-12">
                 <div class="order">
                     <a href="/Shop/order">
-                        <i class="fa-solid fa-truck-fast"></i>
+                        <img src="/Shop/client/images/icon-truck.png"/ width="30px">
                     </a>
                 </div>
             </div>

@@ -373,12 +373,18 @@ select[name="select-sort"]:hover {
     transform: translateY(-5px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
-.inner-image{
-    aspect-ratio:1/1;
+.inner-image {
+    width: 100%; /* Chiếm toàn bộ chiều rộng container cha */
+    aspect-ratio: 1 / 1; /* Đảm bảo giữ tỷ lệ 1:1 (hình vuông) */
+    overflow: hidden; /* Cắt phần thừa nếu ảnh vượt ra ngoài */
+    display: flex;
+    justify-content: center; /* Căn giữa ảnh ngang */
+    align-items: center; /* Căn giữa ảnh dọc */
 }
-.inner-image img{
-    width:200px;
-    height: 200px;
-    object-fit: cover;
+
+.inner-image img {
+    width: 100%; /* Ảnh tự điều chỉnh theo kích thước container */
+    height: 100%; /* Ảnh giữ đúng tỉ lệ với aspect-ratio */
+    object-fit: contain; /* Cắt ảnh để luôn lấp đầy khung */
 }
 

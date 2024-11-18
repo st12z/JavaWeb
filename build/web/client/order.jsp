@@ -32,43 +32,97 @@
         <div class="container px-3 my-5 clearfix">
             <c:if test="${not empty requestScope.orders}">
                 <c:forEach items="${requestScope.orders}" var="o" varStatus="status">
-                    <h3>Đơn hàng  #${o.orderId}: </h3>
-                    <div class="container mt-3 ">
-                        <div class="row ">
-                            <div class="col-12">
-                                <div class="table-payment d-flex justify-content-center">
-                                    <table>
-                                        <thead>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>Đơn hàng  #${o.code}: </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered m-0" table-cart>
+                                    <thead>
+                                        <tr>
+                                            <!-- Set columns width -->
+                                            <th class="text-center py-3 px-4" style="min-width: 400px;">Tên sản phẩm &amp; Ảnh</th>
+                                            <th class="text-right py-3 px-4" style="width: 200px;">Giá</th>
+                                            <th class="text-center py-3 px-4" style="width: 100px;">Màu</th>
+                                            <th class="text-right py-3 px-4" style="width: 150px;">Số lượng</th>
+                                            <th class="text-right py-3 px-4" style="width: 150px;">Tổng tiền</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="${o.list}" var="i" varStatus="status">
                                             <tr>
-                                                <th>STT</th>
-                                                <th>Tên sản phẩm</th>
-                                                <th>Ảnh sản phẩm</th>
-                                                <th>Giá</th>
-                                                <th>Số lượng</th>
-                                                <th>Tổng tiền</th>
+                                                <td class="p-4">
+                                                    <div class="media align-items-center">
+                                                        <img src="${i.image}" alt="image" style="width:80px" />
+                                                        <div class="media-body">
+                                                            <p><b>${i.product.name}</b></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="text-right font-weight-semibold align-middle p-4">${i.product.getPriceVND()} VNĐ
+                                                </td>
+                                                <td><span class="badge badge-info">${i.color}</span></td>
+                                                <td class="align-middle p-4">
+                                                    <div class="inner-quantity">
+                                                        <input style="width:50px" type="number" readonly value="${i.quantity}" />
+                                                    </div>
+
+                                                </td>
+                                                <td class="text-right font-weight-semibold align-middle p-4">${i.getMoneyVND()} VNĐ</td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach items="${o.list}" var="i" varStatus="status">
-                                                <tr>
-                                                    <td>${status.index+1}</td>
-                                                    <td>${i.product.name}</td>
-                                                    <td><img src="${i.image}" alt="image" style="width:80px"/></td>
-                                                    <td>${i.product.getPriceVND()} VNĐ</td>
-                                                    <td>${i.quantity}</td>
-                                                    <td>${i.getMoneyVND()} VNĐ</td>
-                                                </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                    </table>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- / Shopping cart table -->
+
+                            <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
+                                <div class="mt-4">
+
+                                </div>
+                                <div class="d-flex">
+                                    <div class="text-right mt-4">
+                                        <label class="text-muted font-weight-normal m-0">Total price</label>
+                                        <div class="text-large"><strong total-payment>Tổng tiền thanh toán: ${o.getTotalMoneyVND()} VNĐ
+                                                VNĐ</strong></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <h2 style="color:red">Tổng tiền đơn hàng của bạn: ${o.getTotalMoneyVND()} VNĐ</h2>
+                    <div class="row mt-5">
+                        <div class="col-8 justify-items-center mx-auto">
+                            <div class="card">
+                                <div class="card-header">
+                                    Thông tin người thanh toán
+                                </div>
+                                <div class="card-body">
+                                    <form >
+                                        <div class="form-group">
+                                            <label for="exampleInputEmail1">Họ và tên</label>
+                                            <input readonly  class="form-control" value="${o.fullName}">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password-current">Số điện thoại</label>
+                                            <input readonly  class="form-control" value="${o.phone}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password-current">Địa chỉ giao hàng</label>
+                                            <input readonly  class="form-control" value="${o.address}"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password-current">Ngày đặt</label>
+                                            <input readonly  class="form-control" value="${o.formatCreatedAt()}"/>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                             
                 </c:forEach>
-
             </c:if>
+
             <c:if test="${empty requestScope.orders}">
                 <h1>Bạn không có đơn hàng nào</h1>
             </c:if>
