@@ -42,7 +42,7 @@ public class OrderDetail {
     }
     
     public String formatCreatedAt() {
-        SimpleDateFormat sf = new SimpleDateFormat("hh:mm:ss dd/MM/yyyy");
+        SimpleDateFormat sf = new SimpleDateFormat("dd/MM/yyyy");
         String date= sf.format(createAt);
         return date;
     }

@@ -388,3 +388,15 @@ select[name="select-sort"]:hover {
     object-fit: contain; /* Cắt ảnh để luôn lấp đầy khung */
 }
 
+[reviewed-star]{
+    cursor: pointer;
+}
+[reviewing-star]{
+    cursor:pointer;
+}
+[review-edit]{
+    cursor:pointer;
+}
+[edit-star]{
+    cursor:pointer;
+}

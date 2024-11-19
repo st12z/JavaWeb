@@ -4,11 +4,21 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/detail.jsp</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/UpdateReviewServlet.java</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/js/script.js</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/dal/DAO.java</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/AddReview.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/cart.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/header.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/order.jsp</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/DetailProductServlet.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/DetailOrderServlet.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/PaymentServlet.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/UpdateReviewServlet.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/js/script.js</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/payment.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/change-password.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/helper/helperClass.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/client/css/style.css</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/DetailCartServlet.java</file>
         </group>
     </open-files>
 </project-private>
