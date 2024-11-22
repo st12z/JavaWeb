@@ -86,7 +86,7 @@ public class UpdateReviewServlet extends HttpServlet {
                     int rating = Integer.parseInt(rating_raw);
                     java.util.Date utilDate = new Date();
                     d.updateReview(Integer.parseInt(reviewId), rating, description,new java.sql.Date(utilDate.getTime()));
-                    ArrayList<Review> list = d.getAllReview(productId);
+                    ArrayList<Review> list = d.getAllReviewByProductId(productId);
                     int sumRating = 0;
                     for (Review review : list) {
                         sumRating += review.getRating();

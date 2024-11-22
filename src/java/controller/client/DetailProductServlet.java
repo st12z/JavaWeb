@@ -93,7 +93,7 @@ public class DetailProductServlet extends HttpServlet {
                         }
                     }
                 }
-                ArrayList<Review> listReview = d.getAllReview(productId);
+                ArrayList<Review> listReview = d.getAllReviewByProductId(productId);
                 Statics statics = d.getStatic(productId);
                 System.out.println("Product: " + p);
                 System.out.println("ColorsProduct: " + colorsProduct);

@@ -2,32 +2,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.client;
+package controller.admin;
 
 import dal.DAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
-import java.util.List;
-import model.ColorProduct;
-import model.Product;
 import model.Review;
-import model.Statics;
-import model.User;
 
 /**
  *
  * @author T
  */
-@WebServlet(name = "DeleteReviewServlet", urlPatterns = {"/delete-review/*"})
-public class DeleteReviewServlet extends HttpServlet {
+@WebServlet(name = "DeleteCategoryServlet", urlPatterns = {"/admin/delete-category/*"})
+public class DeleteCategoryServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +39,10 @@ public class DeleteReviewServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DeleteReviewServlet</title>");
+            out.println("<title>Servlet DeleteCategoryServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DeleteReviewServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet DeleteCategoryServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,35 +60,13 @@ public class DeleteReviewServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
-
-        // Kiểm tra và lấy lỗi từ session nếu có
-        String error = (String) session.getAttribute("error");
-        if (error != null) {
-            // Gửi lỗi tới trang JSP
-            request.setAttribute("error", error);
-
-            // Xóa lỗi khỏi session sau khi hiển thị
-            session.removeAttribute("error");
-        }
         String pathInfo = request.getPathInfo(); // Lấy thông tin đường dẫn
         if (pathInfo != null && pathInfo.matches("/\\w+")) { // Kiểm tra ID có dạng /id
             try {
-                String reviewId = pathInfo.substring(1); // Lấy ID sản phẩm (bỏ dấu "/")
+                String categoryId = pathInfo.substring(1); // Lấy ID sản phẩm (bỏ dấu "/")
                 DAO d = new DAO();
-                String productId = d.getProductId(Integer.parseInt(reviewId));
-                d.deleteReview(Integer.parseInt(reviewId));
-                ArrayList<Review> list = d.getAllReviewByProductId(productId);
-                int sumRating = 0;
-                int averageRating = 0;
-                if (!list.isEmpty()) {
-                    for (Review review : list) {
-                        sumRating += review.getRating();
-                    }
-                    averageRating = sumRating / list.size();
-                }
-                d.updateRatingOfProduct(productId, averageRating);
-                response.sendRedirect("/Shop/detail/" + productId);
+                d.deleteCategory(Integer.parseInt(categoryId));
+                response.sendRedirect("/Shop/admin/categories");
 
             } catch (Exception ex) {
                 ex.printStackTrace();

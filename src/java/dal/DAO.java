@@ -29,7 +29,7 @@ import model.Statics;
 public class DAO extends DBContext {
 
     public List<Category> getAll() {
-        String sql = "select *from Category";
+        String sql = "select *from Category where deleted=0";
         List<Category> list = new ArrayList<>();
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -45,7 +45,7 @@ public class DAO extends DBContext {
     }
 
     public List<Product> getAllProducts() {
-        String sql = "select *from Product";
+        String sql = "select *from Product where deleted=0";
         List<Product> list = new ArrayList<>();
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -63,7 +63,7 @@ public class DAO extends DBContext {
     }
 
     public Category getCategoryByID(int id) {
-        String sql = "select *from Category where id=?";
+        String sql = "select *from Category where id=? and deleted=0";
         try {
             PreparedStatement st = connection.prepareStatement(sql);
             st.setInt(1, id);
@@ -88,7 +88,7 @@ public class DAO extends DBContext {
     }
 
     public List<Product> getProductbyCondition(int id, String radioPrice, String keyword) {
-        String sql = "select *from Product where 1=1";
+        String sql = "select *from Product where 1=1 and deleted=0";
         List<Product> list = new ArrayList();
         try {
             if (id != 0) {
@@ -157,7 +157,7 @@ public class DAO extends DBContext {
     }
 
     public Product getProduct(String id) {
-        String sql = "select *from Product where id=?";
+        String sql = "select *from Product where id=? and deleted=0";
 
         try {
             PreparedStatement st = connection.prepareStatement(sql);
@@ -510,7 +510,7 @@ public class DAO extends DBContext {
                     items.add(item);
                 }
                 OrderDetail o = new OrderDetail(userId, rs1.getString("fullName"), rs1.getString("address"), rs1.getString("phone"),
-                        rs1.getDouble("totalPayment"),rs1.getDate("createAt"),rs1.getString("code"));
+                        rs1.getDouble("totalPayment"), rs1.getDate("createAt"), rs1.getString("code"));
                 o.setOrderId(orderId);
                 o.setList(items);
                 orders.add(o);
@@ -596,7 +596,24 @@ public class DAO extends DBContext {
         }
     }
 
-    public ArrayList<Review> getAllReview(String productId) {
+    public ArrayList<Review> getAllReview() {
+        String sql = "select * from Review ";
+        ArrayList<Review> list = new ArrayList();
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            while (rs.next()) {
+                list.add(new Review(rs.getInt("id"), getProduct(rs.getString("productId")),
+                        getUserById(rs.getInt("userId")), rs.getNString("content"), rs.getInt("rating"), rs.getDate("createdAt")));
+            }
+            return list;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList<Review> getAllReviewByProductId(String productId) {
         String sql = "select * from Review where productId=? order by createdAt desc";
         ArrayList<Review> list = new ArrayList();
         try {
@@ -675,7 +692,214 @@ public class DAO extends DBContext {
         }
     }
 
+    public ArrayList<OrderDetail> getAllOrder() {
+        String sql = "select *from OrderDetail";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            ArrayList<OrderDetail> list = new ArrayList<>();
+            while (rs.next()) {
+                list.add(new OrderDetail(rs.getInt("userId"), rs.getNString("fullName"),
+                        rs.getNString("address"), rs.getString("phone"), rs.getDouble("totalPayment"),
+                        rs.getDate("createAt"), rs.getString("code")));
+
+            }
+            return list;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList<Product> getProductByCategoryId(int categoryId) {
+        String sql = "select *from product where categoryId=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setInt(1, categoryId);
+            ResultSet rs = st.executeQuery();
+            ArrayList<Product> list = new ArrayList<>();
+            while (rs.next()) {
+                Product p = new Product(rs.getString("id"), rs.getString("name"), rs.getInt("quantity"), rs.getDouble("price"),
+                        rs.getDate("releaseDate"), rs.getString("image"), rs.getDate("createdAt"), rs.getDate("updatedAt"), rs.getString("status"),
+                        rs.getDouble("discountPercentage"), rs.getString("promotion"), rs.getString("warranty"), rs.getInt("deleted"), getCategoryByID(rs.getInt("categoryId")), rs.getInt("rating"));
+                list.add(p);
+
+            }
+            return list;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public void deleteProduct(String productId) {
+        String sql = "UPDATE [dbo].[Product]\n"
+                + "   SET [deleted] =1\n"
+                + " WHERE id=?";
+        try {
+            DAO d = new DAO();
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, productId);
+            st.executeUpdate();
+        } catch (Exception ex) {
+
+        }
+    }
+
+    public void deleteCategory(int categoryId) {
+        String sql = "UPDATE [dbo].[Category]\n"
+                + "   SET [deleted] =1\n"
+                + " WHERE id=?";
+        try {
+            DAO d = new DAO();
+            PreparedStatement st = connection.prepareStatement(sql);
+            ArrayList<Product> listProduct = d.getProductByCategoryId(categoryId);
+            for (Product p : listProduct) {
+                d.deleteProduct(p.getId());
+            }
+            st.setInt(1, categoryId);
+            st.executeUpdate();
+        } catch (Exception ex) {
+
+        }
+    }
+
+    public void insertCategory(String name, String description) {
+        String sql = "INSERT INTO [dbo].[Category]\n"
+                + "           ([name]\n"
+                + "           ,[description]\n"
+                + "           ,[deleted])\n"
+                + "     VALUES\n"
+                + "           (?\n"
+                + "           ,?\n"
+                + "           ,0)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setNString(1, name);
+            st.setNString(2, description);
+            st.executeUpdate();
+        } catch (Exception error) {
+
+        }
+    }
+
+    public void updateCategory(int categoryId, String name, String description) {
+        String sql = "UPDATE [dbo].[Category]\n"
+                + "   SET [name] = ?\n"
+                + "      ,[description] = ?\n"
+                + " WHERE id=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setNString(1, name);
+            st.setNString(2, description);
+            st.setInt(3, categoryId);
+            st.executeUpdate();
+        } catch (Exception error) {
+
+        }
+    }
+
+    public ArrayList<Product> getAllProduct() {
+        String sql = "select *from Product where deleted=0 order by createdAt desc";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            ResultSet rs = st.executeQuery();
+            ArrayList<Product> list = new ArrayList<>();
+            while (rs.next()) {
+                Product p = new Product(rs.getString("id"), rs.getString("name"), rs.getInt("quantity"), rs.getDouble("price"),
+                        rs.getDate("releaseDate"), rs.getString("image"), rs.getDate("createdAt"), rs.getDate("updatedAt"), rs.getString("status"),
+                        rs.getDouble("discountPercentage"), rs.getString("promotion"), rs.getString("warranty"), rs.getInt("deleted"), getCategoryByID(rs.getInt("categoryId")), rs.getInt("rating"));
+                list.add(p);
+
+            }
+            return list;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public void insertProduct(Product p) {
+        String sql = "INSERT INTO [dbo].[Product]\n"
+                + "           ([id]\n"
+                + "           ,[name]\n"
+                + "           ,[quantity]\n"
+                + "           ,[price]\n"
+                + "           ,[releaseDate]\n"
+                + "           ,[image]\n"
+                + "           ,[categoryId]\n"
+                + "           ,[createdAt]\n"
+                + "           ,[updatedAt]\n"
+                + "           ,[status]\n"
+                + "           ,[discountPercentage]\n"
+                + "           ,[promotion]\n"
+                + "           ,[warranty]\n"
+                + "           ,[deleted]\n"
+                + "           ,[rating])\n"
+                + "     VALUES\n"
+                + "           (?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?\n"
+                + "           ,?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, p.getId());
+            st.setNString(2, p.getName());
+            st.setInt(3, p.getQuantity());
+            st.setDouble(4, p.getPrice());
+            st.setDate(5, p.getReleaseDate());
+            st.setString(6, p.getImage());
+            st.setInt(7, p.getCategory().getId());
+            st.setDate(8, p.getCreatedAt());
+            st.setDate(9, p.getUpdatedAt());
+            st.setString(10, p.getStatus());
+            st.setDouble(11, p.getDiscountPercentage());
+            st.setString(12, p.getPromotion());
+            st.setString(13, p.getWarranty());
+            st.setInt(14, 0);
+            st.setInt(15, 0);
+            st.executeUpdate();
+        } catch (Exception error) {
+
+        }
+    }
+
     public static void main(String[] args) {
         DAO d = new DAO();
+        Category category = d.getCategoryByID(1);
+
+// Tạo đối tượng Product với đầy đủ tham số
+        Product exampleProduct = new Product(
+                "P001", // id
+                "Laptop Dell XPS 13", // name
+                50, // quantity
+                1200.5, // price
+                java.sql.Date.valueOf("2023-11-01"), // releaseDate
+                "xps13.jpg", // image
+                java.sql.Date.valueOf("2023-11-20"), // createdAt
+                java.sql.Date.valueOf("2023-11-21"), // updatedAt
+                "Available", // status
+                10.0, // discountPercentage
+                "Black Friday Deal", // promotion
+                "2 Years Warranty", // warranty
+                0, // deleted
+                category, // category
+                5 // rating
+        );
+        d.insertProduct(exampleProduct);
     }
 }

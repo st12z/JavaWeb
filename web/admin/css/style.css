@@ -1,0 +1,66 @@
+/* Đặt toàn bộ bố cục */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Định dạng header */
+.header {
+  background-color: #343a40;
+  color: #fff;
+  padding: 10px;
+
+}
+
+.header .inner-logo a {
+  color: #fff;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.header .text-right a {
+  color: #fff;
+  margin-right: 10px;
+}
+
+/* Định dạng sider bên trái */
+.sider {
+  background-color: #495057;
+  color: #fff;
+  width: 200px;
+  padding: 20px;
+  height: 100%;
+  position: absolute;
+  top: 56px; /* Tương ứng chiều cao của header */
+  left: 0;
+ 
+}
+
+.sider .inner-menu ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sider .inner-menu ul li {
+  margin: 10px 0;
+}
+
+.sider .inner-menu ul li a {
+  color: white;
+  text-decoration: none;
+}
+
+/* Nội dung chính bên phải */
+.main {
+  margin-left: 220px; /* Chừa khoảng cách cho sider */
+  padding: 20px;
+  
+}
+.inner-user{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+} 

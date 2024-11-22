@@ -35,6 +35,10 @@ public class Category {
         this.name = name;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     
     
 }

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-package controller.client;
+package controller.admin;
 
 import dal.DAO;
 import java.io.IOException;
@@ -14,20 +14,21 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Part;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
-import model.ColorProduct;
+import java.util.Date;
+import model.Category;
 import model.Product;
-import model.Review;
-import model.Statics;
 import model.User;
 
 /**
  *
  * @author T
  */
-@WebServlet(name = "DeleteReviewServlet", urlPatterns = {"/delete-review/*"})
-public class DeleteReviewServlet extends HttpServlet {
+@WebServlet(name = "CreateProductServlet", urlPatterns = {"/admin/create-product"})
+public class CreateProductServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +47,10 @@ public class DeleteReviewServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet DeleteReviewServlet</title>");
+            out.println("<title>Servlet CreateProductServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet DeleteReviewServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet CreateProductServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,43 +68,11 @@ public class DeleteReviewServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession session = request.getSession();
 
-        // Kiểm tra và lấy lỗi từ session nếu có
-        String error = (String) session.getAttribute("error");
-        if (error != null) {
-            // Gửi lỗi tới trang JSP
-            request.setAttribute("error", error);
-
-            // Xóa lỗi khỏi session sau khi hiển thị
-            session.removeAttribute("error");
-        }
-        String pathInfo = request.getPathInfo(); // Lấy thông tin đường dẫn
-        if (pathInfo != null && pathInfo.matches("/\\w+")) { // Kiểm tra ID có dạng /id
-            try {
-                String reviewId = pathInfo.substring(1); // Lấy ID sản phẩm (bỏ dấu "/")
-                DAO d = new DAO();
-                String productId = d.getProductId(Integer.parseInt(reviewId));
-                d.deleteReview(Integer.parseInt(reviewId));
-                ArrayList<Review> list = d.getAllReviewByProductId(productId);
-                int sumRating = 0;
-                int averageRating = 0;
-                if (!list.isEmpty()) {
-                    for (Review review : list) {
-                        sumRating += review.getRating();
-                    }
-                    averageRating = sumRating / list.size();
-                }
-                d.updateRatingOfProduct(productId, averageRating);
-                response.sendRedirect("/Shop/detail/" + productId);
-
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-        } else {
-            // Nếu không có ID hợp lệ, trả về lỗi 404
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-        }
+        DAO d = new DAO();
+        ArrayList<Category> listCategories = (ArrayList<Category>) d.getAll();
+        request.setAttribute("listCategories", listCategories);
+        request.getRequestDispatcher("/admin/create-product.jsp").forward(request, response);
     }
 
     /**
@@ -117,7 +86,37 @@ public class DeleteReviewServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+
+        try {
+            String name = request.getParameter("name");
+            int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+            int quantity = Integer.parseInt(request.getParameter("quantity"));
+            double price = Double.parseDouble(request.getParameter("price"));
+            double discountPercentage = Double.parseDouble(request.getParameter("discountPercentage"));
+            String status = request.getParameter("status");
+            Part avatarPart = request.getPart("image");
+            String avatarFileName = avatarPart.getSubmittedFileName();
+            String uploadPath = "C:/Users/T/Documents/NetBeansProjects/Shop/web/client/images/" + avatarFileName;
+            String urlImage = "client/images/" + avatarFileName;
+            String id = name.toLowerCase();
+            DAO d = new DAO();
+            FileOutputStream fos = new FileOutputStream(uploadPath);
+            InputStream is = avatarPart.getInputStream();
+            byte[] data = new byte[is.available()];
+            is.read(data);
+            fos.write(data);
+            fos.close();
+            java.util.Date utilDate = new Date();
+            Product p = new Product(id, name, quantity, price, new java.sql.Date(utilDate.getTime()),
+                    urlImage, new java.sql.Date(utilDate.getTime()), new java.sql.Date(utilDate.getTime()), status,
+                    discountPercentage, "Giảm 10%", "1 năm", 0, d.getCategoryByID(categoryId), 0);
+            System.out.println(p);
+            d.insertProduct(p);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
+        response.sendRedirect("/Shop/admin/products");
     }
 
     /**
