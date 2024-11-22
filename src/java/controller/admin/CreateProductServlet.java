@@ -8,6 +8,7 @@ import dal.DAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
@@ -28,6 +29,7 @@ import model.User;
  * @author T
  */
 @WebServlet(name = "CreateProductServlet", urlPatterns = {"/admin/create-product"})
+@MultipartConfig
 public class CreateProductServlet extends HttpServlet {
 
     /**
@@ -94,18 +96,23 @@ public class CreateProductServlet extends HttpServlet {
             double price = Double.parseDouble(request.getParameter("price"));
             double discountPercentage = Double.parseDouble(request.getParameter("discountPercentage"));
             String status = request.getParameter("status");
-            Part avatarPart = request.getPart("image");
-            String avatarFileName = avatarPart.getSubmittedFileName();
+            System.out.println(name);
+            System.out.println(categoryId);
+            System.out.println(quantity);
+            System.out.println(quantity);
+            Part imagePart = request.getPart("image");
+            String avatarFileName = imagePart.getSubmittedFileName();
             String uploadPath = "C:/Users/T/Documents/NetBeansProjects/Shop/web/client/images/" + avatarFileName;
+            System.out.println(uploadPath);
             String urlImage = "client/images/" + avatarFileName;
-            String id = name.toLowerCase();
-            DAO d = new DAO();
             FileOutputStream fos = new FileOutputStream(uploadPath);
-            InputStream is = avatarPart.getInputStream();
+            InputStream is = imagePart.getInputStream();
             byte[] data = new byte[is.available()];
             is.read(data);
             fos.write(data);
             fos.close();
+            String id = name.toLowerCase();
+            DAO d = new DAO();
             java.util.Date utilDate = new Date();
             Product p = new Product(id, name, quantity, price, new java.sql.Date(utilDate.getTime()),
                     urlImage, new java.sql.Date(utilDate.getTime()), new java.sql.Date(utilDate.getTime()), status,

@@ -20,36 +20,40 @@
         <div class="main">
             <%@ include file='sider.jsp' %>
             <div class="container">
-                <form method="POST" action="/Shop/admin/create-product" form-product enctype="multipart/form-data">
+                <form method="POST" action="/Shop/admin/edit-product/${product.id}" form-product enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="name">Tên sản phẩm</label>
-                        <input type="text" class="form-control" id="name" name="name" />
+                        <input type="text" class="form-control" id="name" value="${product.name}" name="name" />
                     </div>
                     <div class="form-group">
                         <label for="category">Danh mục</label>
                         <select name="categoryId" id="category" class="form-control" required>
-                            <option value="" disabled selected>-- Chọn danh mục --</option>
+                            <option value="" disabled>-- Chọn danh mục --</option>
                             <c:forEach items="${requestScope.listCategories}" var="item">
-                                <option value="${item.id}" >${item.name}</option>
+                                <option value="${item.id}" 
+                                        <c:if test="${item.id == product.category.id}">
+                                            selected
+                                        </c:if>
+                                        >${item.name}</option>
                             </c:forEach>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="quantity">Số lượng</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity" required />
+                        <input type="number" class="form-control" id="quantity" name="quantity" value="${product.quantity}" required />
                     </div>
                     <div class="form-group">
                         <label for="price">Giá</label>
-                        <input type="number" class="form-control" id="price" name="price" required/>
+                        <input type="text" class="form-control" id="price" name="price" value="${product.getPriceVND()}" required/>
                     </div>
                     <div class="form-group">
                         <label for="discountPercentage">Giảm giá</label>
-                        <input type="number" class="form-control" id="discountPercentage" name="discountPercentage" required/>
+                        <input type="number" class="form-control" id="discountPercentage" value="${product.discountPercentage}" name="discountPercentage" required/>
                     </div>
                     <div class="form-group" upload-image >
                         <label class="form-label" class="small mb-1" for="avatar">Ảnh </label>
                         <input upload-image-input  class="form-control-file" type="file" id="avatar" name="image" accept="images/*" />
-                        <img src="" width="200px" class="image-preview"/>
+                        <img src="/Shop/${product.image}" width="200px" class="image-preview"/>
                     </div> 
                     <div class="form-check form-check-group form-check-inline">
                         <input type="radio"  class="form-check-input" id="active" name="status" value="active" checked/>
@@ -60,7 +64,7 @@
                         <label for="inactive"  class="form-check-label form-check-inline">Ngừng hoạt động</label>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Tạo</button>
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
                     </div>
 
                 </form>

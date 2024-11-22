@@ -3,6 +3,7 @@
     <servlet>
         <servlet-name>DetailProductServlet</servlet-name>
         <servlet-class>controller.client.DetailProductServlet</servlet-class>
+
     </servlet>
     <servlet-mapping>
         <servlet-name>DetailProductServlet</servlet-name>

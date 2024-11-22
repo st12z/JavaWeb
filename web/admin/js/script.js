@@ -21,12 +21,3 @@ if (uploadImage) {
     });
 }
 ;
-const form=document.querySelector("[form-product]");
-console.log(form);
-if(form){
-    form.addEventListener("submit",(e)=>{
-    
-        console.log(e.target.elements[0].value,e.target.elements[1].value
-        ,e.target.elements[2].value,e.target.elements[3].value,e.target.elements[4].value,e.target.elements[5].value,);
-    })
-}

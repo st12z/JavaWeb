@@ -878,28 +878,49 @@ public class DAO extends DBContext {
         }
     }
 
+    public void updateProduct(Product p, String productId) {
+        String sql = "UPDATE [dbo].[Product]\n"
+                + "   SET [name] = ?\n"
+                + "      ,[quantity] =?\n"
+                + "      ,[price] = ?\n"
+                + "      ,[releaseDate] =?\n"
+                + "      ,[image] = ?\n"
+                + "      ,[categoryId] =?\n"
+                + "      ,[createdAt] = ?\n"
+                + "      ,[updatedAt] = ?\n"
+                + "      ,[status] = ?\n"
+                + "      ,[discountPercentage] = ?\n"
+                + "      ,[promotion] = ?\n"
+                + "      ,[warranty] = ?\n"
+                + "      ,[deleted] = ?\n"
+                + "      ,[rating] = ?\n"
+                + " WHERE id=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setNString(1, p.getName());
+            st.setInt(2, p.getQuantity());
+            st.setDouble(3, p.getPrice());
+            st.setDate(4, p.getReleaseDate());
+            st.setString(5, p.getImage());
+            st.setInt(6, p.getCategory().getId());
+            st.setDate(7, p.getCreatedAt());
+            st.setDate(8, p.getUpdatedAt());
+            st.setString(9, p.getStatus());
+            st.setDouble(10, p.getDiscountPercentage());
+            st.setString(11, p.getPromotion());
+            st.setString(12, p.getWarranty());
+            st.setInt(13, 0);
+            st.setInt(14, 0);
+            st.setString(15, productId);
+            st.executeUpdate();
+        } catch (Exception error) {
+
+        }
+    }
+
     public static void main(String[] args) {
         DAO d = new DAO();
         Category category = d.getCategoryByID(1);
 
-// Tạo đối tượng Product với đầy đủ tham số
-        Product exampleProduct = new Product(
-                "P001", // id
-                "Laptop Dell XPS 13", // name
-                50, // quantity
-                1200.5, // price
-                java.sql.Date.valueOf("2023-11-01"), // releaseDate
-                "xps13.jpg", // image
-                java.sql.Date.valueOf("2023-11-20"), // createdAt
-                java.sql.Date.valueOf("2023-11-21"), // updatedAt
-                "Available", // status
-                10.0, // discountPercentage
-                "Black Friday Deal", // promotion
-                "2 Years Warranty", // warranty
-                0, // deleted
-                category, // category
-                5 // rating
-        );
-        d.insertProduct(exampleProduct);
     }
 }

@@ -5,13 +5,13 @@
         <group>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/model/Product.java</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/dal/DAO.java</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/DetailUserServlet.java</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/admin/DeleteCategoryServlet.java</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/admin/categories.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/admin/EditCategoryServlet.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/admin/EditProductServlet.java</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/admin/CreateProductServlet.java</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/admin/create-product.jsp</file>
             <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/controller/client/AddReview.java</file>
-            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/src/java/HomeAdminServlet.java</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/admin/create-product.jsp</file>
+            <file>file:/C:/Users/T/Documents/NetBeansProjects/Shop/web/admin/edit-product.jsp</file>
         </group>
     </open-files>
 </project-private>

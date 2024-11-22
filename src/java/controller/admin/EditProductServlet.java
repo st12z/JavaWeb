@@ -8,18 +8,26 @@ import dal.DAO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Date;
 import model.Category;
+import model.Product;
 
 /**
  *
  * @author T
  */
-@WebServlet(name = "EditCategoryServlet", urlPatterns = {"/admin/edit-category/*"})
-public class EditCategoryServlet extends HttpServlet {
+@WebServlet(name = "EditProductServlet", urlPatterns = {"/admin/edit-product/*"})
+@MultipartConfig
+public class EditProductServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +46,10 @@ public class EditCategoryServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet EditCategoryServlet</title>");
+            out.println("<title>Servlet EditProductServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet EditCategoryServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet EditProductServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -62,11 +70,13 @@ public class EditCategoryServlet extends HttpServlet {
         String pathInfo = request.getPathInfo(); // Lấy thông tin đường dẫn
         if (pathInfo != null && pathInfo.matches("/\\w+")) { // Kiểm tra ID có dạng /id
             try {
-                String categoryId = pathInfo.substring(1); // Lấy ID sản phẩm (bỏ dấu "/")
+                String productId = pathInfo.substring(1); // Lấy ID sản phẩm (bỏ dấu "/")
                 DAO d = new DAO();
-                Category c = d.getCategoryByID(Integer.parseInt(categoryId));
-                request.setAttribute("category", c);
-                request.getRequestDispatcher("/admin/edit-category.jsp").forward(request, response);
+                Product p = d.getProduct(productId);
+                request.setAttribute("product", p);
+                ArrayList<Category> listCategories = (ArrayList<Category>) d.getAll();
+                request.setAttribute("listCategories", listCategories);
+                request.getRequestDispatcher("/admin/edit-product.jsp").forward(request, response);
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -75,6 +85,7 @@ public class EditCategoryServlet extends HttpServlet {
             // Nếu không có ID hợp lệ, trả về lỗi 404
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
+
     }
 
     /**
@@ -91,12 +102,38 @@ public class EditCategoryServlet extends HttpServlet {
         String pathInfo = request.getPathInfo(); // Lấy thông tin đường dẫn
         if (pathInfo != null && pathInfo.matches("/\\w+")) { // Kiểm tra ID có dạng /id
             try {
-                String name=request.getParameter("name");
-                String description=request.getParameter("description");
-                String categoryId = pathInfo.substring(1); // Lấy ID sản phẩm (bỏ dấu "/")
+                String productId = pathInfo.substring(1); // Lấy ID sản phẩm (bỏ dấu "/")
+                String name = request.getParameter("name");
+                int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+                int quantity = Integer.parseInt(request.getParameter("quantity"));
+                double price = Double.parseDouble(request.getParameter("price"));
+                double discountPercentage = Double.parseDouble(request.getParameter("discountPercentage"));
+                String status = request.getParameter("status");
+                System.out.println(name);
+                System.out.println(categoryId);
+                System.out.println(quantity);
+                System.out.println(quantity);
+                Part imagePart = request.getPart("image");
+                String avatarFileName = imagePart.getSubmittedFileName();
+                String uploadPath = "C:/Users/T/Documents/NetBeansProjects/Shop/web/client/images/" + avatarFileName;
+                System.out.println(uploadPath);
+                String urlImage = "client/images/" + avatarFileName;
+                FileOutputStream fos = new FileOutputStream(uploadPath);
+                InputStream is = imagePart.getInputStream();
+                byte[] data = new byte[is.available()];
+                is.read(data);
+                fos.write(data);
+                fos.close();
+                String id = name.toLowerCase();
                 DAO d = new DAO();
-                d.updateCategory(Integer.parseInt(categoryId), name, description);
-                response.sendRedirect("/Shop/admin/categories");
+                java.util.Date utilDate = new Date();
+                Product p = new Product(id, name, quantity, price, new java.sql.Date(utilDate.getTime()),
+                        urlImage, new java.sql.Date(utilDate.getTime()), new java.sql.Date(utilDate.getTime()), status,
+                        discountPercentage, "Giảm 10%", "1 năm", 0, d.getCategoryByID(categoryId), 0);
+                System.out.println(p);
+                d.insertProduct(p);
+
+                d.updateProduct(p, productId);
 
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -105,6 +142,7 @@ public class EditCategoryServlet extends HttpServlet {
             // Nếu không có ID hợp lệ, trả về lỗi 404
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
+        response.sendRedirect("/Shop/admin/products");
     }
 
     /**
