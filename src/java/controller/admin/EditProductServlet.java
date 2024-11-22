@@ -106,7 +106,7 @@ public class EditProductServlet extends HttpServlet {
                 String name = request.getParameter("name");
                 int categoryId = Integer.parseInt(request.getParameter("categoryId"));
                 int quantity = Integer.parseInt(request.getParameter("quantity"));
-                double price = Double.parseDouble(request.getParameter("price"));
+                double price = Double.parseDouble(request.getParameter("price").replace(".", ""));
                 double discountPercentage = Double.parseDouble(request.getParameter("discountPercentage"));
                 String status = request.getParameter("status");
                 System.out.println(name);
@@ -116,30 +116,37 @@ public class EditProductServlet extends HttpServlet {
                 Part imagePart = request.getPart("image");
                 String avatarFileName = imagePart.getSubmittedFileName();
                 String uploadPath = "C:/Users/T/Documents/NetBeansProjects/Shop/web/client/images/" + avatarFileName;
-                System.out.println(uploadPath);
-                String urlImage = "client/images/" + avatarFileName;
-                FileOutputStream fos = new FileOutputStream(uploadPath);
-                InputStream is = imagePart.getInputStream();
-                byte[] data = new byte[is.available()];
-                is.read(data);
-                fos.write(data);
-                fos.close();
-                String id = name.toLowerCase();
-                DAO d = new DAO();
-                java.util.Date utilDate = new Date();
-                Product p = new Product(id, name, quantity, price, new java.sql.Date(utilDate.getTime()),
-                        urlImage, new java.sql.Date(utilDate.getTime()), new java.sql.Date(utilDate.getTime()), status,
-                        discountPercentage, "Giảm 10%", "1 năm", 0, d.getCategoryByID(categoryId), 0);
-                System.out.println(p);
-                d.insertProduct(p);
 
-                d.updateProduct(p, productId);
+                String urlImage = "client/images/" + avatarFileName;
+                DAO d = new DAO();
+                String id = name.toLowerCase();
+                if (avatarFileName.equals("")) {
+                    java.util.Date utilDate = new Date();
+                    Product productAno = d.getProduct(productId);
+                    Product p = new Product(id, name, quantity, price, new java.sql.Date(utilDate.getTime()),
+                            productAno.getImage(), new java.sql.Date(utilDate.getTime()), new java.sql.Date(utilDate.getTime()), status,
+                            discountPercentage, "Giảm 10%", "1 năm", 0, d.getCategoryByID(categoryId), 0);
+                    d.updateProduct(p, productId);
+                } else {
+                    FileOutputStream fos = new FileOutputStream(uploadPath);
+                    InputStream is = imagePart.getInputStream();
+                    byte[] data = new byte[is.available()];
+                    is.read(data);
+                    fos.write(data);
+                    fos.close();
+
+                    java.util.Date utilDate = new Date();
+                    Product p = new Product(id, name, quantity, price, new java.sql.Date(utilDate.getTime()),
+                            urlImage, new java.sql.Date(utilDate.getTime()), new java.sql.Date(utilDate.getTime()), status,
+                            discountPercentage, "Giảm 10%", "1 năm", 0, d.getCategoryByID(categoryId), 0);
+
+                    d.updateProduct(p, productId);
+                }
 
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         } else {
-            // Nếu không có ID hợp lệ, trả về lỗi 404
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
         }
         response.sendRedirect("/Shop/admin/products");
