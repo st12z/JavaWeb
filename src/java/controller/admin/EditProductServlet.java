@@ -119,11 +119,11 @@ public class EditProductServlet extends HttpServlet {
 
                 String urlImage = "client/images/" + avatarFileName;
                 DAO d = new DAO();
-                String id = name.toLowerCase();
+                Product productAno = d.getProduct(productId);
                 if (avatarFileName.equals("")) {
                     java.util.Date utilDate = new Date();
-                    Product productAno = d.getProduct(productId);
-                    Product p = new Product(id, name, quantity, price, new java.sql.Date(utilDate.getTime()),
+                    
+                    Product p = new Product(productAno.getId(), name, quantity, price, new java.sql.Date(utilDate.getTime()),
                             productAno.getImage(), new java.sql.Date(utilDate.getTime()), new java.sql.Date(utilDate.getTime()), status,
                             discountPercentage, "Giảm 10%", "1 năm", 0, d.getCategoryByID(categoryId), 0);
                     d.updateProduct(p, productId);
@@ -136,7 +136,7 @@ public class EditProductServlet extends HttpServlet {
                     fos.close();
 
                     java.util.Date utilDate = new Date();
-                    Product p = new Product(id, name, quantity, price, new java.sql.Date(utilDate.getTime()),
+                    Product p = new Product(productAno.getId(), name, quantity, price, new java.sql.Date(utilDate.getTime()),
                             urlImage, new java.sql.Date(utilDate.getTime()), new java.sql.Date(utilDate.getTime()), status,
                             discountPercentage, "Giảm 10%", "1 năm", 0, d.getCategoryByID(categoryId), 0);
 

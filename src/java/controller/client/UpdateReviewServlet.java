@@ -83,7 +83,13 @@ public class UpdateReviewServlet extends HttpServlet {
                 String reviewId = pathInfo.substring(1);
                 DAO d = new DAO();
                 try {
-                    int rating = Integer.parseInt(rating_raw);
+                    int rating=0;
+                    if(!rating_raw.equals("") ){
+                        rating = Integer.parseInt(rating_raw);
+                    }
+                    else{
+                        rating=d.getProduct(productId).getRating();
+                    }
                     java.util.Date utilDate = new Date();
                     d.updateReview(Integer.parseInt(reviewId), rating, description,new java.sql.Date(utilDate.getTime()));
                     ArrayList<Review> list = d.getAllReviewByProductId(productId);
@@ -93,12 +99,14 @@ public class UpdateReviewServlet extends HttpServlet {
                     }
                     int averageRating = (sumRating + rating) / (list.size() + 1);
                     d.updateRatingOfProduct(productId, averageRating);
-                    String url_redirect = "/Shop/detail/" + productId;
-                    response.sendRedirect(url_redirect);
+                    
+                    
 
                 } catch (Exception ex) {
                     System.out.println(ex);
                 }
+                String url_redirect = "/Shop/detail/" + productId;
+                response.sendRedirect(url_redirect);
             }
         }
         /**

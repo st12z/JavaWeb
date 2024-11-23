@@ -5,6 +5,7 @@
 package controller.admin;
 
 import dal.DAO;
+import helper.helperClass;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -20,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 import model.Category;
 import model.Product;
 import model.User;
@@ -111,7 +113,11 @@ public class CreateProductServlet extends HttpServlet {
             is.read(data);
             fos.write(data);
             fos.close();
-            String id = name.toLowerCase();
+            String a[]=name.toLowerCase().trim().split("\\s+");
+            String id="";
+            for(String x:a){
+                id+=x;
+            }
             DAO d = new DAO();
             java.util.Date utilDate = new Date();
             Product p = new Product(id, name, quantity, price, new java.sql.Date(utilDate.getTime()),
@@ -120,7 +126,7 @@ public class CreateProductServlet extends HttpServlet {
             System.out.println(p);
             d.insertProduct(p);
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
 
         response.sendRedirect("/Shop/admin/products");

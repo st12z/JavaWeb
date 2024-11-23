@@ -29,7 +29,7 @@ public class Product {
     private int rating;
     @Override
     public String toString() {
-        return "Product{" + "id=" + id + ", name=" + name + ", quantity=" + quantity + ", price=" + price + ", releaseDate=" + releaseDate + ", image=" + image + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", status=" + status + ", discountPercentage=" + discountPercentage + ", promotion=" + promotion + ", warranty=" + warranty + ", deleted=" + deleted + ", category=" + category + '}';
+        return "Product{" + "id=" + id + ", name=" + name + ", quantity=" + quantity + ", price=" + price + ", releaseDate=" + releaseDate + ", image=" + image + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", status=" + status + ", discountPercentage=" + discountPercentage + ", promotion=" + promotion + ", warranty=" + warranty + ", deleted=" + deleted + ", category=" + category + '}'+ rating;
     }
 
     public String getColor() {
