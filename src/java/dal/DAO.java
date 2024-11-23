@@ -21,6 +21,7 @@ import model.OrderDetail;
 import model.Product;
 import model.Review;
 import model.Statics;
+import model.TokenPassword;
 
 /**
  *
@@ -915,6 +916,55 @@ public class DAO extends DBContext {
             st.executeUpdate();
         } catch (Exception error) {
 
+        }
+    }
+
+    public void insertToken(User u, String token) {
+        String sql = "INSERT INTO [dbo].[TokenPassword]\n"
+                + "           ([email]\n"
+                + "           ,[token])\n"
+                + "     VALUES\n"
+                + "           (?\n"
+                + "           ,?)";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, u.getEmail());
+            st.setString(2, token);
+            st.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public TokenPassword getTokenPassword(String email, String token) {
+        String sql = "select top 1* from TokenPassword where email=? and token=?";
+        try {
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(1, email);
+            st.setString(2, token);
+            ResultSet rs = st.executeQuery();
+            if (rs.next()) {
+                TokenPassword a = new TokenPassword(email, token);
+                return a;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public void updateUserPassword(String email, String password) {
+        String sql = "UPDATE [dbo].[Users]\n"
+                + "   SET [password] = ?\n"
+                + " WHERE email=?";
+        try{
+            PreparedStatement st = connection.prepareStatement(sql);
+            st.setString(2, email);
+            st.setString(1,password);
+            st.executeUpdate();
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 

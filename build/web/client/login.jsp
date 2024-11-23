@@ -55,9 +55,11 @@
                                                 <label class="form-label"  for="typePasswordX1">Mật khẩu</label>
                                                 <input type="password" name="password" required id="typePasswordX1" class="form-control form-control-lg" />
                                             </div>   
+
                                             <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit">Đăng nhập</button>
 
                                         </form>
+                                        <a href="/Shop/forgot-password" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5 mt-3" width="200px" >Quên mật khẩu</a>
                                     </div>
                                 </div>
                             </div>

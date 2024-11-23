@@ -44,22 +44,14 @@
 
                                     <div class="mb-md-5 mt-md-4 pb-5">
 
-                                        <h2 class="fw-bold mb-2 text-uppercase">Đăng nhập</h2>
-                                        <form action="login" method="POST">
+                                        <h2 class="fw-bold mb-2 text-uppercase">Quên mật khẩu</h2>
+                                        <form action="forgot-password" method="POST">
                                             <div data-mdb-input-init class="form-outline form-white mb-4">
                                                 <label class="form-label" for="typeEmailX">Email</label>
                                                 <input type="email" id="typeEmailX" name="email" required class="form-control form-control-lg" />
                                             </div>
-
-                                            <div data-mdb-input-init class="form-outline form-white mb-4">
-                                                <label class="form-label"  for="typePasswordX1">Mật khẩu</label>
-                                                <input type="password" name="password" required id="typePasswordX1" class="form-control form-control-lg" />
-                                            </div>   
-
-                                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit">Đăng nhập</button>
-
+                                            <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit">Gửi mã OTP</button>
                                         </form>
-                                        <a href="/Shop/forgot-password" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5 mt-3" width="200px" >Quên mật khẩu</a>
                                     </div>
                                 </div>
                             </div>
